@@ -4,13 +4,6 @@ public class Item {
     private int quantity, cost;
     private final double calories;
 
-    public Item() {
-        this.name = "unknown item";
-        this.quantity = 0;
-        this.calories = 0;
-        this.cost = 0;
-    }
-
     public Item(String name, double calories) {
         this.name = name;
         this.calories = calories;
@@ -25,19 +18,19 @@ public class Item {
         this.cost = cost;
     }
 
-    public Item(String name, double calories, int quantity, int cost) {
+    public Item(String name, double calories, int cost, int quantity) {
         this.name = name;
         this.calories = calories;
-        this.quantity = quantity;
         this.cost = cost;
+        this.quantity = quantity;
     }
 
 
     /* methods */
     public int buyItem(int quantity, int money) {
-        int change = money - (quantity * cost);
+        int change = money - (quantity * this.cost);
         if (change >= 0)
-            setQuantity(this.quantity - quantity);
+            setQuantity(this.getQuantity() - quantity);
 
         return change;
     }
