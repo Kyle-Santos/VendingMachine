@@ -28,9 +28,8 @@ public class Item {
 
     /* methods */
     public int buyItem(int quantity, int money) {
-        int change = money - (quantity * this.cost);
-        if (change >= 0)
-            setQuantity(this.getQuantity() - quantity);
+        int change = money - (quantity * this.cost); 
+        setQuantity(this.getQuantity() - quantity);
 
         return change;
     }
@@ -39,6 +38,7 @@ public class Item {
         this.quantity += quantity;
     }
 
+    @Override
     public String toString() {
         return name + "\nCalories: " + calories + "\nQuantity: " + quantity + "\nCost: Php " + cost;
     }

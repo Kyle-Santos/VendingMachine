@@ -35,27 +35,30 @@ public class Driver {
 
                 case "2":
                     do {
-                        System.out.println("\n[Functions of Vending]\n(1) Add Item\n(2) Buy Item\n");
+                        System.out.println("\n[Functions of Vending]\n(1) Add Item\n(2) Buy Item\n(3) List Available Items\n(4) Exit\n");
                         f = sc.nextLine();
 
                         switch (f) {
                             case "1":
-                                regVendings.get(0).addItem("Soda", 44, 40, 10);
-                                regVendings.get(0).addItem("Fishcake", 201, 60, 10);
+                                // regVendings.get(0).addItem("Soda", 44, 40, 10);
+                                // regVendings.get(0).addItem("Fishcake", 201, 60, 10);
                                 break;
                             case "2":
                                 regVendings.get(0).listItems();
                                 System.out.print("\nWhat Item Do You Wanna Buy?\n>> ");
                                 g = sc.nextLine();
 
-                                String result = regVendings.get(0).buy(g, 6, 500);
-                                System.out.println(result);
+                                regVendings.get(0).buy(g, 6, 500);
                                 break;
                             case "3":
                                 regVendings.get(0).listItems();
                                 break;
+                            case "4":
+                                break;
+                            default:
+                                System.out.println("\nEnter valid input.");
                         }
-                    } while (!f.equals("3"));
+                    } while (!f.equals("4"));
                     break;
 
                 case "3":
