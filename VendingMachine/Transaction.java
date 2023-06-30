@@ -15,6 +15,6 @@ public class Transaction {
 
     @Override
     public String toString() {
-        return "\n" + bought + "\n==============================\nWhen: " + date + "==============================\n";
+        return "\n" + bought + "\n==================================\nWhen: " + date + "\n==================================\n";
     }
 }

@@ -39,8 +39,10 @@ public class Vending {
 
         System.out.println("\nProcessing the amount... \nBuying...");
 
-        if (success)
+        if (success) {
             printSold(item, quantity, change);
+            System.out.println("Buying Sucessful!\nDispensing Item/s Now......\n");
+        }
         else    
             System.out.println("\nYour Money " + change.getAmount() + 
             " peso is returned.\nFailed to buy due to insufficient amount.");
