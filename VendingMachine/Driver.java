@@ -18,6 +18,7 @@ public class Driver {
         VendingCollection collection = new VendingCollection();
 
         String input; // user's input
+        System.out.println("\nWELCOME TO THE VENDING MACHINE SIMULATOR");
 
         // main program loop
         do {

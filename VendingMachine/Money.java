@@ -37,7 +37,7 @@ public class Money {
         int[] denominations = {1000, 500, 200, 100, 50, 20, 10, 5, 1};
 
         for (int i = 0; i < denominations.length; i++)
-            addDenomination(denominations[i], pay.getDenominations().get(i));
+            addDenomination(denominations[i], pay.getDenominations().get(i).intValue());
 
         totalAmount += pay.getTotalAmount();
     }
