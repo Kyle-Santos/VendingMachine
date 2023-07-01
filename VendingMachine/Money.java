@@ -73,14 +73,6 @@ public class Money {
         return listing;
     }
 
-    public void setDenomination(int key, int value) {
-        denominations.replace(key, value);
-    }
-
-    public void setTotalAmount(int totalAmount) {
-        this.totalAmount = totalAmount;
-    }
-
     public void deductDenomination(int key, int value) {
         int val = denominations.get(key);
         denominations.replace(key, value - val);
@@ -95,10 +87,6 @@ public class Money {
 
     public int getTotalAmount() {
         return this.totalAmount;
-    }
-
-    public HashMap<Integer, Integer> getDenominations() {
-        return denominations;
     }
 
 }
