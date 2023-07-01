@@ -16,6 +16,17 @@ public class Inventory {
         slot.add(new Item("Wasabi (43g)", 31, 72, 30));
     }
 
+    public String toString() {
+        String s = "";
+        int j = 1;
+
+        for (Item i : slot) {           
+            s += "["+j+"] " + i + "\n";
+            j++;
+        }
+        return s;
+    }
+
     public void addItem(Item item) {
         slot.add(item);
         System.out.println("Item added successfully!");
@@ -23,5 +34,17 @@ public class Inventory {
 
     public ArrayList<Item> getSlot() {
         return this.slot;
+    }
+
+    public String[] getNames() {
+        String[] s = new String[slot.size()];
+        int j = 0;
+
+        for (Item i : slot) {
+            s[j] = i.getName();
+            j++;
+        }
+
+        return s;
     }
 }

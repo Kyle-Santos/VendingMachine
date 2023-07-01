@@ -21,6 +21,7 @@ public class Money {
         this.totalAmount = 0;
     }
 
+
     public void updateDenominations(Money pay) {
         int[] denominations = {1000, 500, 200, 100, 50, 20, 10, 5, 1};
 

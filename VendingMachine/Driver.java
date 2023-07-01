@@ -2,9 +2,10 @@ import java.util.Scanner;
 
 public class Driver {
     public static void main(String[] args) {
+        Scanner sc = new Scanner(System.in);
         //VendingGUI gui = new VendingGUI();
         VendingCollection collection = new VendingCollection();
-        Scanner sc = new Scanner(System.in);
+        
 
         String input; // input
 

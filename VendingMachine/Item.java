@@ -11,13 +11,6 @@ public class Item {
         quantity = 0;
     }
 
-    public Item(String name, double calories, int cost) {
-        this.name = name;
-        this.calories = calories;
-        this.quantity = 0;
-        this.cost = cost;
-    }
-
     public Item(String name, double calories, int cost, int quantity) {
         this.name = name;
         this.calories = calories;
@@ -40,7 +33,7 @@ public class Item {
 
     @Override
     public String toString() {
-        return name + "\nCalories: " + calories + "\nQuantity: " + quantity + "\nCost: Php " + cost;
+        return name + " | Calories: " + calories + " | Quantity: " + quantity + " | Cost: Php " + cost;
     }
 
 

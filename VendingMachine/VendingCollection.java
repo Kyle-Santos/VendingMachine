@@ -1,4 +1,5 @@
 import java.util.ArrayList;
+import java.util.InputMismatchException;
 import java.util.Scanner;
 
 public class VendingCollection {
@@ -9,8 +10,8 @@ public class VendingCollection {
     }
 
     public void createVending() {
-        String f;
         Scanner sc = new Scanner(System.in);
+        String f;
 
         System.out.println("\n[Vending Machines]\n(1) Regular\n(2) Special\n");
         f = sc.nextLine();
@@ -32,9 +33,9 @@ public class VendingCollection {
     }
 
     public void testVending() {
-        String choice, f, g;
         Scanner sc = new Scanner(System.in);
-
+        String choice, f, g;
+        int n, m, price;
         System.out.print("\nEnter the name of Vending Machine: ");
         f = sc.nextLine();
 
@@ -46,35 +47,87 @@ public class VendingCollection {
                     choice = sc.nextLine(); 
 
                     switch (choice) {
-                        
-                    }
-                } while(!choice.equals("3"));
-                do {
-                    System.out.println("\n[Functions of Vending]\n(1) Add Item\n(2) Buy Item\n(3) List Available Items\n(4) Exit\n");
-                    g = sc.nextLine();
-
-                    switch (g) {
                         case "1":
-                            // regVendings.get(0).addItem("Soda", 44, 40, 10);
-                            // regVendings.get(0).addItem("Fishcake", 201, 60, 10);
+                            do {
+                                System.out.println("\n[Vending Features]\n(1) Buy Item\n(2) List Available Items\n(3) Exit\n");
+                                g = sc.nextLine();
+            
+                                switch (g) {
+                                    case "1":
+                                        v.buy();
+                                        break;
+                                    case "2":
+                                        v.listItems();
+                                        break;
+                                    case "3":
+                                        break;
+                                    default:
+                                        System.out.println("\nEnter valid input.");
+                                }
+                            } while (!g.equals("3"));
                             break;
                         case "2":
-                            v.buy();
+                            do {
+                                System.out.println("\n[Maintenance Features]\n(1) Restock Specific Item\n(2) Set New Price of an Item\n(3) Collect the Money\n(4) Replenish Money\n(5) Add Item\n(6) Exit\n");
+                                g = sc.nextLine();
+            
+                                switch (g) {
+                                    case "1":
+                                        v.listItems();
+
+                                        try {
+                                            System.out.print("\nWhat item do you wanna restock? ");
+                                            n = sc.nextInt();
+                                            System.out.print("\nHow many are you restocking? ");
+                                            m = sc.nextInt();
+                                        } catch (InputMismatchException e) {
+                                            System.out.println("\nEnter Valid Input.");
+                                            break;
+                                        }
+
+                                        v.restockItem(n - 1, m);
+                                        sc.nextLine();
+                                        break;
+                                    case "2":
+                                        v.listItems();
+
+                                        try {
+                                            System.out.print("\nWhat item do you wanna set a new price? ");
+                                            n = sc.nextInt();
+                                            System.out.print("\nWhat should be the new price? ");
+                                            price = sc.nextInt();
+                                        } catch (InputMismatchException e) {
+                                            System.out.println("\nEnter Valid Input.");
+                                            break;
+                                        }
+
+                                        v.updatePrice(n - 1, price);
+                                        break;
+            
+                                    case "3":
+                                        v.collectMoney();
+                                        break;
+                                    case "4":
+                                        v.replenishMoney();
+                                        break;
+                                    case "5":
+                                        v.addNewItem();
+                                        break;
+                                    case "6":
+                                        break;
+                                    default:
+                                        System.out.println("\nEnter valid input.");
+                                }
+                            } while (!g.equals("5"));
                             break;
 
                         case "3":
-                            v.listItems();
-                            break;
-                        case "4":
                             break;
                         default:
-                            System.out.println("\nEnter valid input.");
+                            System.out.println("\nEnter Valid Input.");
                     }
-                } while (!g.equals("4"));
-
+                } while(!choice.equals("3"));
             }
-
-        sc.close();
     }
 
     public void listVendings() {
