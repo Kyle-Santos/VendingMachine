@@ -10,10 +10,10 @@ public class Inventory {
         slot.add(new Item("Salmon (100g)", 117, 300, 30));
         slot.add(new Item("Crab Stick (200g)", 190, 75, 30));
         slot.add(new Item("Cucumber (500g)", 88, 88, 30));
-        slot.add(new Item("Nori", 30.35, 21, 30));
-        slot.add(new Item("Nori", 30.35, 21, 30));
-        slot.add(new Item("Nori", 30.35, 21, 30));
-        slot.add(new Item("Nori", 30.35, 21, 30));
+        slot.add(new Item("Sushi Rice (500g)", 354, 50, 30));
+        slot.add(new Item("Tuna Saku Bar (200g)", 256, 264, 30));
+        slot.add(new Item("Mango", 300, 53, 30));
+        slot.add(new Item("Wasabi (43g)", 31, 72, 30));
     }
 
     public void addItem(Item item) {
