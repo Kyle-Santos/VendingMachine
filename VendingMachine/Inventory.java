@@ -35,16 +35,4 @@ public class Inventory {
     public ArrayList<Item> getSlot() {
         return this.slot;
     }
-
-    public String[] getNames() {
-        String[] s = new String[slot.size()];
-        int j = 0;
-
-        for (Item i : slot) {
-            s[j] = i.getName();
-            j++;
-        }
-
-        return s;
-    }
 }
