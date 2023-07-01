@@ -118,7 +118,7 @@ public class VendingCollection {
                                     default:
                                         System.out.println("\nEnter valid input.");
                                 }
-                            } while (!g.equals("5"));
+                            } while (!g.equals("6"));
                             break;
 
                         case "3":
