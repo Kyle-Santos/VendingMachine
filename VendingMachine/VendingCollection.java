@@ -2,13 +2,24 @@ import java.util.ArrayList;
 import java.util.InputMismatchException;
 import java.util.Scanner;
 
+/**
+ * The VendingCollection class represents a collection of Vending Machines.
+ * It provides methods to create new Vending machines and manage them.
+ */
 public class VendingCollection {
-    ArrayList<Vending> regVendings = new ArrayList<Vending>();
+    ArrayList<Vending> regVendings; // List of Vending machines
 
+    /**
+     * Constructs a new VendingCollection with an empty list of Vending machines.
+     */
     public VendingCollection() {
         this.regVendings = new ArrayList<Vending>();
     }
 
+    /**
+     * Creates a new Vending machine.
+     * The user will be asked to input the name of the Vending machine.
+     */
     public void createVending() {
         Scanner sc = new Scanner(System.in);
         String f;
@@ -22,7 +33,7 @@ public class VendingCollection {
                 regVendings.add(new Vending(f));
                 System.out.print("\nRegular Vending Machine Successfully Created.\n");
                 break;
-            
+
             // not yet implemented
             case "2":
                 break;
@@ -32,6 +43,10 @@ public class VendingCollection {
         }
     }
 
+    /**
+     * Tests a Vending machine by displaying a menu to perform various operations.
+     * The user will be asked to input the name of the Vending machine to test.
+     */
     public void testVending() {
         Scanner sc = new Scanner(System.in);
         String choice, f, g;
@@ -41,17 +56,17 @@ public class VendingCollection {
 
         for (Vending v : regVendings)
             if (f.equalsIgnoreCase(v.getName())) {
-                do 
+                do
                 {
                     System.out.print("\n[What do you wanna Test?]\n(1) Vending Features\n(2) Maintenance Features\n(3) Exit\n\nENTER INPUT: ");
-                    choice = sc.nextLine(); 
+                    choice = sc.nextLine();
 
                     switch (choice) {
                         case "1":
                             do {
                                 System.out.println("\n[Vending Features]\n(1) Buy Item\n(2) List Available Items\n(3) Exit\n");
                                 g = sc.nextLine();
-            
+
                                 switch (g) {
                                     case "1":
                                         v.buy();
@@ -70,7 +85,7 @@ public class VendingCollection {
                             do {
                                 System.out.println("\n[Maintenance Features]\n(1) Restock Specific Item\n(2) Set New Price of an Item\n(3) Collect the Money\n(4) Replenish Money\n(5) Add Item\n(6) Exit\n");
                                 g = sc.nextLine();
-            
+
                                 switch (g) {
                                     case "1":
                                         v.listItems();
@@ -103,7 +118,7 @@ public class VendingCollection {
 
                                         v.updatePrice(n - 1, price);
                                         break;
-            
+
                                     case "3":
                                         v.collectMoney();
                                         break;
@@ -130,6 +145,9 @@ public class VendingCollection {
             }
     }
 
+    /**
+     * Lists all the Vending machines in the collection.
+     */
     public void listVendings() {
         System.out.println("\nRegular Vending Machines:\n");
         for (Vending v : regVendings) {
