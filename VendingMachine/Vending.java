@@ -82,7 +82,7 @@ public class Vending {
         boolean ok = false;
         String choice;
         while (!ok) {
-            System.out.println("\nTotal inserted: " + insert.totalAmount);
+            System.out.println("\nTotal inserted: " + insert.getTotalAmount());
             System.out.print("\nInsert/Enter Your Money: \n[1] ₱1\t\t[6] ₱100\n[2] ₱5\t\t[7] ₱200\n[3] ₱10\t\t[8] ₱500\n[4] ₱20\t\t[9] ₱1,000\n[5] ₱50\t\t[10] Done\n\n");
             choice = sc.nextLine();
             

@@ -2,8 +2,8 @@ import java.util.HashMap;
 import java.util.Map;
 
 public class Money {
-    int totalAmount;
-    HashMap<Integer, Integer> denominations;
+    private int totalAmount;
+    private HashMap<Integer, Integer> denominations;
 
     public Money() {
         this.denominations = new HashMap<Integer, Integer>();
