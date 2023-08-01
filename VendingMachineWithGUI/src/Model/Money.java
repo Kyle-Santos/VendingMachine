@@ -38,7 +38,7 @@ public class Money {
             if (pay.getDenominations().get(denominations[i]) != 0)
                 addDenomination(denominations[i], pay.getDenominations().get(denominations[i]));
 
-        totalAmount += pay.getTotalAmount();
+        //totalAmount += pay.getTotalAmount();
     }
 
     /**
@@ -120,12 +120,12 @@ public class Money {
     }
 
     public void resetMoney() {
-        denominations.put(100, 0);
-        denominations.put(50, 0);
-        denominations.put(20, 0);
-        denominations.put(10, 0);
-        denominations.put(5, 0);
-        denominations.put(1, 0);
+        denominations.replace(100, 0);
+        denominations.replace(50, 0);
+        denominations.replace(20, 0);
+        denominations.replace(10, 0);
+        denominations.replace(5, 0);
+        denominations.replace(1, 0);
 
         this.totalAmount = 0;
     }

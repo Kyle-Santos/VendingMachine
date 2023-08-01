@@ -4,7 +4,6 @@ import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Font;
 import java.awt.Image;
-import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
 import javax.swing.BorderFactory;
@@ -15,7 +14,6 @@ import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
-import javax.swing.event.DocumentListener;
 
 public class MainMenuGUI extends JFrame{
     private JButton btnSpecial;
@@ -28,6 +26,7 @@ public class MainMenuGUI extends JFrame{
     private JButton btnMaintenance;
     private JTextField tfCreate;
     private JTextField tfTest;
+    private JButton btnExit;
 
     public MainMenuGUI() {
         super("Vending Machine Factory Simulator");
@@ -102,10 +101,6 @@ public class MainMenuGUI extends JFrame{
 
         // list vms
         btnListVMS = new JButton("List Available VMs");
-        btnListVMS.addActionListener(new ActionListener() {
-        	public void actionPerformed(ActionEvent e) {
-        	}
-        });
         
         btnMaintenance = new JButton("Maintenance");
         btnMaintenance.setBounds(234, 261, 187, 25);
@@ -114,7 +109,11 @@ public class MainMenuGUI extends JFrame{
         btnListVMS.setSize(187, 42);
         panelCenter.add(btnListVMS);
 
-        ImageIcon centerBG = new ImageIcon("images/centerMainBG.jpg");
+        btnExit = new JButton("Exit");
+        btnExit.setBounds(165, 364, 117, 29);
+        panelCenter.add(btnExit);
+
+        ImageIcon centerBG = new ImageIcon("src/images/centerMainBG.jpg");
         Image image = centerBG.getImage(); // transform it 
         Image newimg = image.getScaledInstance(450, 410,  java.awt.Image.SCALE_SMOOTH); // scale it the smooth way  
         centerBG = new ImageIcon(newimg);
@@ -173,20 +172,20 @@ public class MainMenuGUI extends JFrame{
         btnRegular.addActionListener(listener);
         btnSpecial.addActionListener(listener);
         btnListVMS.addActionListener(listener);
-    }
-
-    public void setDocumentListener(DocumentListener listner) {
-        //item.getDocument().addDocumentListener(listener);
-
+        btnMaintenance.addActionListener(listener);
     }
 
     public String getTfVendingName() {
         return this.tfVendingName.getText();
     }
 
-    public String getSelectedVM() {
-        return (String) this.allVMs.getSelectedItem();
+    public int getSelectedVM() {
+        return this.allVMs.getSelectedIndex();
     }
+ 
+    // public String getSelectedVM() {
+    //     return (String) this.allVMs.getSelectedItem();
+    // }
 
     public void addVMList(String name) {
         allVMs.addItem(name);;

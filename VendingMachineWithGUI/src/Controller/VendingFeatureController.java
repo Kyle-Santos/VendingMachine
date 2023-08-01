@@ -111,7 +111,7 @@ public class VendingFeatureController implements ActionListener, ListSelectionLi
             if (currInsert == vendInsert)
                 popMessage("You need to add any denominations first!", "Inserting Unsuccessful", 0);
             else {
-                vendings.getCurrentVending().setInsertedMoney(insert);
+                vendings.getCurrentVending().getInsertedMoney().setMoney(insert);
                 popMessage("Money (" + (currInsert - vendInsert)  + " Pesos) Successfully Added!", "Inserting Successful", 1);
             }
         } 
@@ -127,7 +127,7 @@ public class VendingFeatureController implements ActionListener, ListSelectionLi
     }
 
     public void popMessage(String message, String title, int type) {
-        JOptionPane.showMessageDialog(null, message, title, type, new ImageIcon("images/iconVM.png"));
+        JOptionPane.showMessageDialog(null, message, title, type, new ImageIcon("src/images/iconVM.png"));
     }
 
     @Override

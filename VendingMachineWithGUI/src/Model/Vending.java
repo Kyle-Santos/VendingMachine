@@ -238,10 +238,6 @@ public class Vending {
     public Money getInsertedMoney() {
         return this.insertedMoney;
     }
-
-    public void setInsertedMoney(Money insertMoney) {
-        this.insertedMoney.setMoney(insertMoney);
-    }
 }
 
 

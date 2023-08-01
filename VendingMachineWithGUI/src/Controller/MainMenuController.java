@@ -5,16 +5,15 @@ import java.awt.event.ActionListener;
 import java.util.ArrayList;
 
 import javax.swing.JOptionPane;
-import javax.swing.event.DocumentEvent;
-import javax.swing.event.DocumentListener;
 
 import Model.Vending;
 import Model.VendingCollection;
 import View.MainMenuGUI;
+import View.MaintenanceGUI;
 import View.VendingFeatureGUI;
 
 
-public class MainMenuController implements ActionListener, DocumentListener { 
+public class MainMenuController implements ActionListener { 
     private MainMenuGUI gui;
     private VendingCollection vendings;
 
@@ -23,7 +22,6 @@ public class MainMenuController implements ActionListener, DocumentListener {
         this.vendings = vendings;
 
         gui.setActionListener(this);
-        gui.setDocumentListener(this);
     }
 
     public void updateView() {
@@ -32,47 +30,32 @@ public class MainMenuController implements ActionListener, DocumentListener {
 
     @Override
     public void actionPerformed(ActionEvent e) {
+        int selected = gui.getSelectedVM() - 1;
+        ArrayList<Vending> vms = vendings.getVendings();
+
         if (e.getActionCommand().equals("Regular")) {
             vendings.createVending(gui.getTfVendingName());
-            //JOptionPane.showMessageDialog(null, "Vending Machine " + gui.getTfVendingName() + "\nSuccessfully Created!", "Creation Successful", JOptionPane.INFORMATION_MESSAGE, new ImageIcon("images/iconVM.png"));
+            //JOptionPane.showMessageDialog(null, "Vending Machine " + gui.getTfVendingName() + "\nSuccessfully Created!", "Creation Successful", JOptionPane.INFORMATION_MESSAGE, new ImageIcon("src/images/iconVM.png"));
             gui.addVMList(gui.getTfVendingName());
         }
         else if (e.getActionCommand().equals("List Available VMs")) {
             JOptionPane.showMessageDialog(null, vendings.listVendings(), "Vending Machines", JOptionPane.PLAIN_MESSAGE);
         }
-        else if (e.getActionCommand().equals("Features")) {
-            String selected = gui.getSelectedVM();
-            ArrayList<Vending> vms = vendings.getVendings();
-            VendingFeatureController vmFeatures;
+        else if (selected >= 0) {
+            if (e.getActionCommand().equals("Features")) {
+                vendings.setCurrent(selected);
+                VendingFeatureGUI feature = new VendingFeatureGUI();
 
-            for (Vending v : vms) {
-                if (v.getName().equals(selected)) {
-                    vendings.setCurrent(vms.indexOf(v));
-                    VendingFeatureGUI feature = new VendingFeatureGUI();
+                new VendingFeatureController(feature, vendings);
+            }
+            else {
+                vendings.setCurrent(selected);
+                MaintenanceGUI maintenance = new MaintenanceGUI();
 
-                    vmFeatures = new VendingFeatureController(feature, vendings);
-
-                    break;
-                }
+                new MaintenanceController(maintenance, vendings);
             }
         }
         
     }
-    @Override
-    public void changedUpdate(DocumentEvent e) {
-        // TODO Auto-generated method stub
-        
-    }
-    @Override
-    public void insertUpdate(DocumentEvent e) {
-        // TODO Auto-generated method stub
-        
-    }
-    @Override
-    public void removeUpdate(DocumentEvent e) {
-        // TODO Auto-generated method stub
-        
-    }
-
     
 }
