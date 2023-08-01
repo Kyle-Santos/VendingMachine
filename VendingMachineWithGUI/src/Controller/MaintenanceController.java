@@ -52,7 +52,6 @@ public class MaintenanceController implements ActionListener, ListSelectionListe
     @Override
     public void actionPerformed(ActionEvent e) {
         String[] denominations = {"100", "50", "20", "10", "5", "1"};
-        int currInsert = insert.getTotalAmount();
         int qty, price;
 
         if (e.getActionCommand().equals("Restock Item")) {
@@ -60,9 +59,8 @@ public class MaintenanceController implements ActionListener, ListSelectionListe
             
             if (qty > 0) {
                 vendings.getCurrentVending().restockItem(gui.getSelectedIndexListItems(), qty);
+                popMessage("Successfully Added Quantity To:\n" + (vendings.getCurrentVending().getSelectedItem(gui.getSelectedIndexListItems())), "Succesful", 1);
                 updateInventoryView();
-                popMessage("Successfully Added Quantity to " + vendings.getCurrentVending().getInventory().getSlot().get(gui.getSelectedIndexListItems()).getName() + 
-                ",\nIts Quantity is now " + vendings.getCurrentVending().getInventory().getSlot().get(gui.getSelectedIndexListItems()).getQuantity(), "Succesful", 1);
             }
             else 
                 popMessage("Enter An Integer Greater than 0", "Invalid Input", 0);
@@ -75,9 +73,8 @@ public class MaintenanceController implements ActionListener, ListSelectionListe
 
             if (price > 0) {
                 vendings.getCurrentVending().updatePrice(gui.getSelectedIndexListItems(), price);
+                popMessage("Successfully Updated The Price Of:\n" + (vendings.getCurrentVending().getInventory().getSlot().get(gui.getSelectedIndexListItems())), "Succesful", 1);
                 updateInventoryView();
-                popMessage("Successfully Updated The Price of " + vendings.getCurrentVending().getInventory().getSlot().get(gui.getSelectedIndexListItems()).getName() + 
-                " to " + vendings.getCurrentVending().getInventory().getSlot().get(gui.getSelectedIndexListItems()).getCost() + " Pesos", "Succesful", 1);
             }
             else
                 popMessage("Enter An Integer Greater than 0", "Invalid Input", 0);
@@ -98,6 +95,40 @@ public class MaintenanceController implements ActionListener, ListSelectionListe
             }
             else
                 popMessage("Check The Verification Box First.", "Collect Money Unsuccessful", 0);
+        }
+        else if (e.getActionCommand().equals("Add Item")) {
+            String name = gui.getTfName(); 
+            String txtcalories = gui.getTfCalories();
+            String txtnewQty = gui.getSpinnerNewQty();
+            String txtcost = gui.getTfCost();
+            double calories = 0;
+            int newQty = 0, cost = 0;
+            boolean valid = true;
+
+            if (!(name.equals("") || txtcalories.equals("") || txtnewQty.equals("") || txtcost.equals(""))) {
+                try {
+                    calories = Double.parseDouble(txtcalories);
+                    newQty = Integer.parseInt(txtnewQty);
+                    cost = Integer.parseInt(txtcost);
+                }
+                catch (NumberFormatException n) {
+                    valid = false;
+                    popMessage("Invalid Input. Enter valid inputs.", "Add Item Unsuccesful", 0);
+                }
+
+                if (valid) {
+                    if (cost > 0 && newQty >= 0 && calories > 0) {
+                        vendings.getCurrentVending().getInventory().addItem(name, calories, cost, newQty);
+                        gui.setListItems(vendings.getCurrentVending().getInventory());
+                        popMessage(name + " with " + calories + " calories is successfully added!", "Add Item Successful", 1);
+                    }
+                    else
+                        popMessage("Invalid input. Enter integers greater than 0.", "Add Item Unsuccesful", 0);
+                }
+                    
+            }
+            else 
+                popMessage("Complete All The Fields", "Add Item Unsuccesful", 0);
         }
         else if (e.getActionCommand().equals("ADD")) {
             if (insert.getTotalAmount() == 0)
@@ -123,7 +154,11 @@ public class MaintenanceController implements ActionListener, ListSelectionListe
     }
 
     public void popMessage(String message, String title, int type) {
-        JOptionPane.showMessageDialog(null, message, title, type, new ImageIcon("src/images/iconVM.png"));
+        if (type == 1)
+            JOptionPane.showMessageDialog(null, message, title, type, new ImageIcon("src/images/iconVM.png"));
+        else 
+            JOptionPane.showMessageDialog(null, message, title, JOptionPane.ERROR_MESSAGE);
+
     }
 
     @Override

@@ -39,37 +39,6 @@ public class Vending {
     // Maintenance methods
 
     /**
-     * Adds a new item to the vending machine.
-     */
-    public void addNewItem() {
-        Scanner sc = new Scanner(System.in);
-        String name = "";
-        int quantity = 0, cost = 0;
-        double calories = 0;
-
-        System.out.print("\nWhat is the name of the new item? ");
-        name = sc.nextLine();
-
-        do {
-            try {
-                System.out.print("\nWhat is the quantity? ");
-                quantity = sc.nextInt();
-
-                System.out.print("\nWhat is the price? ");
-                cost = sc.nextInt();
-
-                System.out.print("\nWhat is the amount of calories? ");
-                calories = sc.nextDouble();
-            } catch (InputMismatchException e) {
-                System.out.print("\nEnter a valid input.");
-                sc.nextLine();
-            }
-        } while (quantity <= 0 || cost <= 0 || calories <= 0);
-
-        inventory.addItem(new Item(name, calories, cost, quantity));
-    }
-
-    /**
      * Restocks an item at a specific index with a specified quantity.
      *
      * @param index    the index of the item
@@ -237,6 +206,10 @@ public class Vending {
 
     public Money getInsertedMoney() {
         return this.insertedMoney;
+    }
+
+    public Item getSelectedItem(int index) {
+        return inventory.getSlot().get(index);
     }
 }
 

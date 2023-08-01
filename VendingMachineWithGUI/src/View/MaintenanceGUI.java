@@ -293,6 +293,22 @@ public class MaintenanceGUI extends JFrame {
 		return this.checkSure.isSelected();
 	}
 
+    public String getTfName() {
+        return this.tfName.getText();
+    }
+
+    public String getTfCalories() {
+        return this.tfCalories.getText();
+    }
+
+    public String getTfCost() {
+        return this.tfCost.getText();
+    }
+
+    public String getSpinnerNewQty() {
+        return this.spinnerNewQty.getValue().toString();
+    }
+
     public void setListSelectionListener(ListSelectionListener listener) {
         listItems.addListSelectionListener(listener);
     } 

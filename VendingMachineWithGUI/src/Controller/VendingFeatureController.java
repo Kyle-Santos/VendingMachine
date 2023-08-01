@@ -127,7 +127,11 @@ public class VendingFeatureController implements ActionListener, ListSelectionLi
     }
 
     public void popMessage(String message, String title, int type) {
-        JOptionPane.showMessageDialog(null, message, title, type, new ImageIcon("src/images/iconVM.png"));
+        if (type == 1)
+            JOptionPane.showMessageDialog(null, message, title, type, new ImageIcon("src/images/iconVM.png"));
+        else 
+            JOptionPane.showMessageDialog(null, message, title, type);
+
     }
 
     @Override

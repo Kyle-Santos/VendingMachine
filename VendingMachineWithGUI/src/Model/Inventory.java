@@ -47,8 +47,8 @@ public class Inventory {
      *
      * @param item The item to be added to the inventory.
      */
-    public void addItem(Item item) {
-        slot.add(item);
+    public void addItem(String name, double calories, int cost, int qty) {
+        slot.add(new Item(name, calories, cost, qty));
         System.out.println("Item added successfully!");
     }
 
