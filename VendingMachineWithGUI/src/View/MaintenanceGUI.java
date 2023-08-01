@@ -8,6 +8,7 @@ import java.awt.event.ActionListener;
 import javax.swing.DefaultListModel;
 import javax.swing.JButton;
 import javax.swing.JCheckBox;
+import javax.swing.JComboBox;
 import javax.swing.JEditorPane;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
@@ -51,6 +52,7 @@ public class MaintenanceGUI extends JFrame {
     private JTextField tfCost;
 	private JSpinner spinnerNewQty;
 	private JButton btnAddItem;
+    private JComboBox<String> itemType;
 
     public MaintenanceGUI() {
         super("Vending Machine Factory Simulator");
@@ -71,7 +73,6 @@ public class MaintenanceGUI extends JFrame {
     private void init() {
     	tabbedPane = new JTabbedPane(JTabbedPane.TOP);
     	tabbedPane.setBounds(0, 0, 450, 372);
-        
         
 		// PANEL UPDATE
         JPanel panelUpdateItem = new JPanel();
@@ -99,7 +100,7 @@ public class MaintenanceGUI extends JFrame {
         spinnerAddQty.setBounds(219, 214, 50, 26);
         
         listItems = new JList<String>();
-        scrollPane.setRowHeaderView(listItems);
+        scrollPane.setViewportView(listItems);
         panelUpdateItem.setLayout(null);
         panelUpdateItem.add(btnRestock);
         panelUpdateItem.add(labelQuantity);
@@ -224,34 +225,45 @@ public class MaintenanceGUI extends JFrame {
         tfName.setColumns(10);
         
         JLabel labelCalories = new JLabel("How many calories does it have?");
-        labelCalories.setBounds(22, 65, 214, 65);
+        labelCalories.setBounds(22, 52, 214, 65);
         panelAddItem.add(labelCalories);
         
         tfCalories = new JTextField();
-        tfCalories.setBounds(234, 73, 178, 48);
+        tfCalories.setBounds(234, 60, 178, 48);
         panelAddItem.add(tfCalories);
         tfCalories.setColumns(10);
         
         JLabel labelCost = new JLabel("How much does it cost?");
-        labelCost.setBounds(22, 130, 214, 65);
+        labelCost.setBounds(22, 107, 214, 65);
         panelAddItem.add(labelCost);
         
         tfCost = new JTextField();
-        tfCost.setBounds(234, 138, 178, 48);
+        tfCost.setBounds(234, 115, 178, 48);
         panelAddItem.add(tfCost);
         tfCost.setColumns(10);
         
         JLabel labelNewQty = new JLabel("How many is the quantity?");
-        labelNewQty.setBounds(22, 195, 214, 65);
+        labelNewQty.setBounds(22, 157, 214, 65);
         panelAddItem.add(labelNewQty);
         
         spinnerNewQty = new JSpinner();
-        spinnerNewQty.setBounds(234, 203, 178, 48);
+        spinnerNewQty.setBounds(234, 165, 178, 48);
         panelAddItem.add(spinnerNewQty);
         
         btnAddItem = new JButton("Add Item");
         btnAddItem.setBounds(119, 263, 214, 48);
         panelAddItem.add(btnAddItem);
+        
+        JLabel labelType = new JLabel("What type is it?");
+        labelType.setBounds(22, 229, 157, 16);
+        panelAddItem.add(labelType);
+        
+        itemType = new JComboBox<String>();
+        itemType.addItem("Nori");
+        itemType.addItem("Rice");
+        itemType.addItem("Topping");
+        itemType.setBounds(234, 225, 178, 27);
+        panelAddItem.add(itemType);
 
         getContentPane().add(tabbedPane);
     }
@@ -307,6 +319,10 @@ public class MaintenanceGUI extends JFrame {
 
     public String getSpinnerNewQty() {
         return this.spinnerNewQty.getValue().toString();
+    }
+
+    public String getItemType() {
+        return this.itemType.getSelectedItem().toString();
     }
 
     public void setListSelectionListener(ListSelectionListener listener) {

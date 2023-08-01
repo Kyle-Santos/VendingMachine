@@ -8,6 +8,7 @@ public class Item {
     private String name;
     private int quantity, cost;
     private final double calories;
+    private String type;
 
     /**
      * Constructs a new item with the specified name and calories.
@@ -16,11 +17,12 @@ public class Item {
      * @param name     the name of the item
      * @param calories the calories of the item
      */
-    public Item(String name, double calories) {
+    public Item(String name, double calories, String type) {
         this.name = name;
         this.calories = calories;
         cost = 0;
         quantity = 0;
+        this.type = type;
     }
 
     /**
@@ -31,11 +33,12 @@ public class Item {
      * @param cost     the cost of the item
      * @param quantity the quantity of the item
      */
-    public Item(String name, double calories, int cost, int quantity) {
+    public Item(String name, double calories, int cost, int quantity, String type) {
         this.name = name;
         this.calories = calories;
         this.cost = cost;
         this.quantity = quantity;
+        this.type = type;
     }
 
     /**
@@ -106,6 +109,10 @@ public class Item {
      */
     public int getCost() {
         return cost;
+    }
+
+    public String getType() {
+        return this.type;
     }
 
     /**

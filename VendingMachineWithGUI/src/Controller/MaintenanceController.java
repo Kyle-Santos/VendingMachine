@@ -118,7 +118,7 @@ public class MaintenanceController implements ActionListener, ListSelectionListe
 
                 if (valid) {
                     if (cost > 0 && newQty >= 0 && calories > 0) {
-                        vendings.getCurrentVending().getInventory().addItem(name, calories, cost, newQty);
+                        vendings.getCurrentVending().getInventory().addItem(name, calories, cost, newQty, gui.getItemType());
                         gui.setListItems(vendings.getCurrentVending().getInventory());
                         popMessage(name + " with " + calories + " calories is successfully added!", "Add Item Successful", 1);
                     }

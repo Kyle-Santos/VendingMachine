@@ -21,9 +21,11 @@ public class VendingCollection {
      * Creates a new Vending machine.
      * The user will be asked to input the name of the Vending machine.
      */
-    public void createVending(String name) {
-        vendings.add(new Vending(name));
-        System.out.print("\nVending Machine Successfully Created.\n");
+    public void createVending(String name, int type) {
+        if (type == 0)
+            vendings.add(new Vending(name));
+        else
+            vendings.add(new SpecialVending(name));
     }
 
     /**
@@ -32,21 +34,30 @@ public class VendingCollection {
     public String listVendings() {
         String vmList = "";
         int ctr = 1;
-        vmList += "Regular Vending Machines:\n";
+        vmList += "Vending Machines:\n";
         for (Vending v : vendings) {
-            vmList += "(" + ctr + ") " + v + "\n";
+            vmList += "(" + ctr + ") " + v;
+            if (v instanceof SpecialVending)
+                vmList += " (Special)";
+            vmList += "\n";
             ctr++;
         }
 
         return vmList;
     }
 
-    public ArrayList<Vending> getVendings() {
-        return this.vendings;
+    public boolean checkIfNameExists(String name) {
+        boolean exists = false;
+
+        for (Vending v : vendings)
+            if (v.getName().equals(name))
+                exists = true;
+        
+        return exists;
     }
 
-    public int getCurrent() {
-        return this.current;
+    public ArrayList<Vending> getVendings() {
+        return this.vendings;
     }
 
     public void setCurrent(int index) {

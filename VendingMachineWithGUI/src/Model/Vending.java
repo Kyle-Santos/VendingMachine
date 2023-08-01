@@ -1,16 +1,13 @@
 package Model;
 
-import java.util.InputMismatchException;
-import java.util.Scanner;
-
 /**
  * Represents a vending machine with inventory, transaction history, and current money.
  */
 public class Vending {
-    private String name;
-    private Inventory inventory;
-    private TransactionList history;
-    private Money money, insertedMoney;
+    protected String name;
+    protected Inventory inventory;
+    protected TransactionList history;
+    protected Money money, insertedMoney;
 
     /**
      * Constructs a new Vending instance with default name.
@@ -73,87 +70,7 @@ public class Vending {
         this.money.generateChange(money, this.money.getTotalAmount());
     }
 
-    /**
-     * Replenishes the money in the vending machine.
-     */
-    public void replenishMoney() {
-        	
-    }
-
-    /**
-     * Handles the process of buying an item from the vending machine.
-     */
-    public void buy() {
-        Scanner sc = new Scanner(System.in);
-        Money insert = new Money();
-        Item i = new Item("none", 0);
-        String y;
-        int input = 0, quantity = 0;
-
-        do {
-            try {
-                listItems();
-                System.out.print("What Item Do You Wanna Buy? ");
-                input = sc.nextInt();
-            } catch (InputMismatchException e) {
-                System.out.println("\nEnter a Valid Input.");
-                sc.nextLine();
-            }
-
-            try {
-                System.out.print("\nHow many are you buying? ");
-                quantity = sc.nextInt();
-            }
-            catch (InputMismatchException e) {
-                System.out.println("\nEnter a Valid Input.");
-                sc.nextLine();
-            }
-        } while (input <= 0 || quantity <= 0);
-
-        //chooseInsert(insert);
-        sc.nextLine();
-
-        System.out.print("\nAre you sure about buying the item (Y/N)? ");
-        y = sc.nextLine();
-
-        if (y.equalsIgnoreCase("Y")) {
-            boolean success = false;
-            Money change = new Money();
-            int totalCost;
-            i = inventory.getSlot().get(input - 1);
-            if (!success) {
-                totalCost = i.getCost() * quantity;
-                if (insert.getTotalAmount() <= totalCost)
-                    System.out.println("\nMoney inserted is insufficient. Total cost is ₱" + totalCost);
-                else if (i.getQuantity() <= quantity) {
-                    System.out.println("\nThe quantity in the machine is not enough. Only " +  i.getQuantity());
-                }
-                else if (this.money.getTotalAmount() >= totalCost) {
-                    // quantity, denominations, totalamount
-                    this.money.updateDenominations(insert);
-                    totalCost = i.buyItem(quantity, insert.getTotalAmount());
-
-                    success = this.money.generateChange(change, totalCost);
-                }
-                else
-                    System.out.println("\nMoney in the machine is not enough to produce change.");
-
-            }
-
-            if (success) {
-                System.out.println("\nProcessing the amount... \nBuying...");
-                printSold(i.getName(), quantity, change);
-                System.out.println("Buying Sucessful....\nDispensing Item/s Now......\n");
-            }
-            else
-                System.out.println("\nYour Money\n" + insert.listDenominations() +
-                        "is being returned...\n\nFailed to buy.");
-        }
-        else
-            System.out.print("\nYour Money\n" + insert.listDenominations() + "is returned to you\n");
-
-    }
-
+    
     // Vending features
 
     /**

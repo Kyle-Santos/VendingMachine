@@ -15,14 +15,19 @@ public class Inventory {
         slot = new ArrayList<Item>();
 
         // Add initial items to the inventory
-        slot.add(new Item("Nori (5g)", 30.35, 21, 30));
-        slot.add(new Item("Salmon (100g)", 117, 300, 30));
-        slot.add(new Item("Crab Stick (200g)", 190, 75, 30));
-        slot.add(new Item("Cucumber (500g)", 88, 88, 30));
-        slot.add(new Item("Sushi Rice (500g)", 354, 50, 30));
-        slot.add(new Item("Tuna Saku Bar (200g)", 256, 264, 30));
-        slot.add(new Item("Mango", 300, 53, 30));
-        slot.add(new Item("Wasabi (43g)", 31, 72, 30));
+        slot.add(new Item("Plain Nori", 30.35, 21, 30, "Nori"));
+        slot.add(new Item("Spicy Nori", 30.35, 25, 30, "Nori"));
+        slot.add(new Item("Wasabi Nori", 30.35, 29, 30, "Nori"));
+        slot.add(new Item("Exquisite Nori", 30.35, 40, 30, "Nori"));
+        slot.add(new Item("Sushi Rice", 354, 50, 30, "Rice"));
+        slot.add(new Item("Black Rice", 375, 65, 30, "Rice"));
+        slot.add(new Item("Brown Rice", 365, 60, 30, "Rice"));
+        slot.add(new Item("Prawn", 85, 156, 30, "Topping"));
+        slot.add(new Item("Crab Stick", 190, 75, 30, "Topping"));
+        slot.add(new Item("Cucumber", 88, 88, 30, "Topping"));
+        slot.add(new Item("Sashimi", 256, 264, 30, "Topping"));
+        slot.add(new Item("Mango", 300, 53, 30, "Topping"));
+        slot.add(new Item("Wasabi", 31, 72, 30, "Topping"));
     }
 
     /**
@@ -47,8 +52,8 @@ public class Inventory {
      *
      * @param item The item to be added to the inventory.
      */
-    public void addItem(String name, double calories, int cost, int qty) {
-        slot.add(new Item(name, calories, cost, qty));
+    public void addItem(String name, double calories, int cost, int qty, String type) {
+        slot.add(new Item(name, calories, cost, qty, type));
         System.out.println("Item added successfully!");
     }
 

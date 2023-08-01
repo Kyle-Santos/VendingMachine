@@ -2,14 +2,15 @@ package Controller;
 
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.util.ArrayList;
 
+import javax.swing.ImageIcon;
 import javax.swing.JOptionPane;
 
-import Model.Vending;
+import Model.SpecialVending;
 import Model.VendingCollection;
 import View.MainMenuGUI;
 import View.MaintenanceGUI;
+import View.SpecialFeatureGUI;
 import View.VendingFeatureGUI;
 
 
@@ -31,22 +32,44 @@ public class MainMenuController implements ActionListener {
     @Override
     public void actionPerformed(ActionEvent e) {
         int selected = gui.getSelectedVM() - 1;
-        ArrayList<Vending> vms = vendings.getVendings();
 
         if (e.getActionCommand().equals("Regular")) {
-            vendings.createVending(gui.getTfVendingName());
-            //JOptionPane.showMessageDialog(null, "Vending Machine " + gui.getTfVendingName() + "\nSuccessfully Created!", "Creation Successful", JOptionPane.INFORMATION_MESSAGE, new ImageIcon("src/images/iconVM.png"));
-            gui.addVMList(gui.getTfVendingName());
+            if (vendings.checkIfNameExists(gui.getTfVendingName()))
+                popMessage("Enter a unique name.", "Creation Unsuccessful", selected);
+            else {
+                vendings.createVending(gui.getTfVendingName(), 0);
+                popMessage("Vending Machine\n" + gui.getTfVendingName() + "\nSuccessfully Created!", "Creation Successful", 1);
+                gui.addVMList(gui.getTfVendingName());
+            }
+        }
+        else if (e.getActionCommand().equals("Special")) {
+            if (vendings.checkIfNameExists(gui.getTfVendingName()))
+                popMessage("Enter a unique name.", "Creation Unsuccessful", selected);
+            else {
+                vendings.createVending(gui.getTfVendingName(), 1);
+                popMessage("Special Vending Machine\n" + gui.getTfVendingName() + "\nSuccessfully Created!", "Creation Successful", 1);
+                gui.addVMList(gui.getTfVendingName());
+            }
         }
         else if (e.getActionCommand().equals("List Available VMs")) {
-            JOptionPane.showMessageDialog(null, vendings.listVendings(), "Vending Machines", JOptionPane.PLAIN_MESSAGE);
+            popMessage(vendings.listVendings(), "Vending Machines", 1);
+        }
+        else if (e.getActionCommand().equals("Exit")) {
+            System.exit(0);
         }
         else if (selected >= 0) {
             if (e.getActionCommand().equals("Features")) {
                 vendings.setCurrent(selected);
-                VendingFeatureGUI feature = new VendingFeatureGUI();
 
-                new VendingFeatureController(feature, vendings);
+                if (vendings.getCurrentVending() instanceof SpecialVending) {
+                    SpecialVending specialVend = (SpecialVending) vendings.getCurrentVending();
+                    SpecialFeatureGUI specialFeature = new SpecialFeatureGUI();
+                    new SpecialFeatureController(specialFeature, specialVend);
+                }
+                else {
+                    VendingFeatureGUI feature = new VendingFeatureGUI();
+                    new VendingFeatureController(feature, vendings);
+                }
             }
             else {
                 vendings.setCurrent(selected);
@@ -55,7 +78,17 @@ public class MainMenuController implements ActionListener {
                 new MaintenanceController(maintenance, vendings);
             }
         }
+        else
+            popMessage("Select A Vending Machine First.", "Select Vending Machine", 0);
         
+    }
+
+    public void popMessage(String message, String title, int type) {
+        if (type == 1)
+            JOptionPane.showMessageDialog(null, message, title, type, new ImageIcon("src/images/iconVM.png"));
+        else 
+            JOptionPane.showMessageDialog(null, message, title, JOptionPane.ERROR_MESSAGE);
+
     }
     
 }

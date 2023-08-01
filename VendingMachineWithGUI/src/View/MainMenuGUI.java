@@ -173,6 +173,7 @@ public class MainMenuGUI extends JFrame{
         btnSpecial.addActionListener(listener);
         btnListVMS.addActionListener(listener);
         btnMaintenance.addActionListener(listener);
+        btnExit.addActionListener(listener);
     }
 
     public String getTfVendingName() {
