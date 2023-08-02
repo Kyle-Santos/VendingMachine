@@ -26,9 +26,14 @@ import javax.swing.event.ListSelectionListener;
 import Model.Inventory;
 import Model.Item;
 
+/**
+ * The SpecialFeatureGUI class represents the GUI for special features in the vending machine.
+ * It extends JFrame and provides features for buying items, customizing sushi, and inserting money.
+ */
 public class SpecialFeatureGUI extends JFrame{
     private JTabbedPane tabbedPane;
 
+    // Insert Money Pane
     private JButton btn1;
     private JButton btn5;
     private JButton btn10;
@@ -38,12 +43,14 @@ public class SpecialFeatureGUI extends JFrame{
     private JLabel labelAmount;
     private JButton btnInsertMoney;
 
+    // Buy Item Pane
     private JScrollPane scrollPane;
     private JList<String> listItems;
     private JButton btnBuy;
     private JButton btnCancel;
     private JTextField tfQuantity;
 
+    // Customize Sushi Pane
     private JComboBox<String> listNori;
     private JComboBox<String> listRice;
     private JLabel labelNori;
@@ -55,6 +62,10 @@ public class SpecialFeatureGUI extends JFrame{
     private JButton btnAddTopping;
     private ArrayList<Integer> toppingIndexes;
 
+    /**
+     * Creates a new SpecialFeatureGUI instance.
+     * Initializes the GUI for special features of the vending machine.
+     */
     public SpecialFeatureGUI() {
         super("Vending Machine Factory Simulator");
         
@@ -245,6 +256,11 @@ public class SpecialFeatureGUI extends JFrame{
         getContentPane().add(tabbedPane);
     }
 
+    /**
+     * Sets an ActionListener to handle button clicks.
+     *
+     * @param listener The ActionListener to be set.
+     */
     public void setActionListener(ActionListener listener) {
         btnAddTopping.addActionListener(listener);
         btnCreate.addActionListener(listener);
@@ -261,15 +277,30 @@ public class SpecialFeatureGUI extends JFrame{
         btnCancel.addActionListener(listener);
     }
 
+    /**
+     * Sets a ListSelectionListener to handle list selection events for the list of items and toppings.
+     *
+     * @param listener The ListSelectionListener to be set.
+     */
     public void setListSelectionListener(ListSelectionListener listener) {
         listItems.addListSelectionListener(listener);
         listTopping.addListSelectionListener(listener);
     } 
 
+    /**
+     * Sets a ChangeListener to handle tab change events for the tabbed pane.
+     *
+     * @param listener The ChangeListener to be set.
+     */
     public void setChangeListener(ChangeListener listener) {
         tabbedPane.addChangeListener(listener);
     }
 
+    /**
+     * Sets an ItemListener to handle item change events for the combo boxes of Nori and Rice.
+     *
+     * @param listener The ItemListener to be set.
+     */
     public void setItemChangeListener(ItemListener listener) {
         listNori.addItemListener(listener);
         listRice.addItemListener(listener);

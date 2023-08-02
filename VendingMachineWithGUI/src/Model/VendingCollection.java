@@ -46,6 +46,12 @@ public class VendingCollection {
         return vmList;
     }
 
+    /**
+     * Checks if a Vending machine with the given name already exists in the collection.
+     *
+     * @param name the name to check for existence
+     * @return true if a Vending machine with the given name exists, false otherwise
+     */
     public boolean checkIfNameExists(String name) {
         boolean exists = false;
 
@@ -56,14 +62,29 @@ public class VendingCollection {
         return exists;
     }
 
+    /**
+     * Returns the list of all Vending machines in the collection.
+     *
+     * @return the list of all Vending machines in the collection
+     */
     public ArrayList<Vending> getVendings() {
         return this.vendings;
     }
 
+    /**
+     * Sets the current Vending machine index to the specified index in the collection.
+     *
+     * @param index the index of the current Vending machine
+     */
     public void setCurrent(int index) {
         this.current = index;
     }
 
+    /**
+     * Returns the currently selected Vending machine in the collection.
+     *
+     * @return the currently selected Vending machine if one is selected, null otherwise
+     */
     public Vending getCurrentVending() {
         return this.vendings.get(current);
     }

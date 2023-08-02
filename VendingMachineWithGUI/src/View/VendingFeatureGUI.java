@@ -22,7 +22,11 @@ import javax.swing.event.ListSelectionListener;
 import Model.Inventory;
 import Model.Item;
 
-public class VendingFeatureGUI extends JFrame{
+/**
+ * The VendingFeatureGUI class represents the GUI for regular features in the vending machine.
+ * It extends JFrame and provides features for buying items and inserting money.
+ */
+public class VendingFeatureGUI extends JFrame {
     private JTabbedPane tabbedPane;
 
     private JButton btn1;
@@ -40,6 +44,10 @@ public class VendingFeatureGUI extends JFrame{
     private JButton btnCancel;
     private JTextField tfQuantity;
 
+    /**
+     * Creates a new VendingFeatureGUI instance.
+     * Initializes the GUI for regular features of the vending machine.
+     */
     public VendingFeatureGUI() {
         super("Vending Machine Factory Simulator");
         
@@ -164,6 +172,11 @@ public class VendingFeatureGUI extends JFrame{
         getContentPane().add(tabbedPane);
     }
 
+    /**
+     * Sets an ActionListener to handle button clicks.
+     *
+     * @param listener The ActionListener to be set.
+     */
     public void setActionListener(ActionListener listener) {
         btn100.addActionListener(listener);
         btn50.addActionListener(listener);
@@ -177,10 +190,20 @@ public class VendingFeatureGUI extends JFrame{
         btnCancel.addActionListener(listener);
     }
 
+    /**
+     * Sets a ListSelectionListener to handle list selection events for the list of items and toppings.
+     *
+     * @param listener The ListSelectionListener to be set.
+     */
     public void setListSelectionListener(ListSelectionListener listener) {
         listItems.addListSelectionListener(listener);
     } 
 
+    /**
+     * Sets a ChangeListener to handle tab change events for the tabbed pane.
+     *
+     * @param listener The ChangeListener to be set.
+     */
     public void setChangeListener(ChangeListener listener) {
         tabbedPane.addChangeListener(listener);
     }

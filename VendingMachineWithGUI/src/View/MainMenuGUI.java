@@ -15,6 +15,10 @@ import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
 
+/**
+ * The MainMenuGUI class represents the main menu GUI of the Vending Machine Factory Simulator.
+ * It extends JFrame and provides the main user interface for interacting with the application.
+ */
 public class MainMenuGUI extends JFrame{
     private JButton btnSpecial;
     private JButton btnRegular;
@@ -28,6 +32,10 @@ public class MainMenuGUI extends JFrame{
     private JTextField tfTest;
     private JButton btnExit;
 
+    /**
+     * Creates a new MainMenuGUI instance.
+     * Initializes the main menu user interface.
+     */
     public MainMenuGUI() {
         super("Vending Machine Factory Simulator");
         getContentPane().setLayout(new BorderLayout());
@@ -167,6 +175,11 @@ public class MainMenuGUI extends JFrame{
         panelCenter.add(mainmenuBG);
     }
 
+    /**
+     * Sets an ActionListener to handle button clicks.
+     *
+     * @param listener The ActionListener to be set.
+     */
     public void setActionListener(ActionListener listener) {
         btnFeatures.addActionListener(listener);
         btnRegular.addActionListener(listener);
@@ -176,19 +189,30 @@ public class MainMenuGUI extends JFrame{
         btnExit.addActionListener(listener);
     }
 
+    /**
+     * Gets the text entered in the vending name text field.
+     *
+     * @return The text entered in the vending name text field.
+     */
     public String getTfVendingName() {
         return this.tfVendingName.getText();
     }
 
+    /**
+     * Gets the index of the selected vending machine in the combo box.
+     *
+     * @return The index of the selected vending machine in the combo box.
+     */
     public int getSelectedVM() {
         return this.allVMs.getSelectedIndex();
     }
- 
-    // public String getSelectedVM() {
-    //     return (String) this.allVMs.getSelectedItem();
-    // }
 
+    /**
+     * Adds a vending machine name to the combo box.
+     *
+     * @param name The name of the vending machine to be added to the combo box.
+     */
     public void addVMList(String name) {
-        allVMs.addItem(name);;
+        allVMs.addItem(name);
     }
 }

@@ -18,11 +18,20 @@ import Model.SpecialVending;
 import View.PrepareSushiGUI;
 import View.SpecialFeatureGUI;
 
+/**
+ * The SpecialFeatureController class handles user interactions and events from the SpecialFeatureGUI.
+ */
 public class SpecialFeatureController implements ActionListener, ListSelectionListener, ChangeListener, ItemListener { 
     private SpecialFeatureGUI gui;
     private SpecialVending vending;
     private Money insert;
 
+    /**
+     * Creates a new SpecialFeatureController instance.
+     *
+     * @param gui     The SpecialFeatureGUI to be controlled.
+     * @param vending The SpecialVending model.
+     */
     public SpecialFeatureController(SpecialFeatureGUI gui, SpecialVending vending) {
         this.gui = gui;
         this.vending = vending;
@@ -36,21 +45,31 @@ public class SpecialFeatureController implements ActionListener, ListSelectionLi
         gui.setItemChangeListener(this);
     }
 
+    /**
+     * Updates the receipt in the GUI.
+     */
     private void updateReceipt() {
         gui.setReceipt(vending.getListItems());
     }
 
+    /**
+     * Converts a string to an integer.
+     *
+     * @param convert The string to convert.
+     * @return The converted integer value, or 0 if the conversion fails.
+     */
     private int convertToInt(String convert) {
-        int quantity = 0;
-
         try {
-            quantity = Integer.parseInt(convert);
+            return Integer.parseInt(convert);
         } catch (NumberFormatException error) {
             popMessage("Enter a valid Integer!", "Error: Unsuccessful", 0);
+            return 0;
         }
-
-        return quantity;
     }
+
+    /**
+     * Buys a custom sushi from the vending machine.
+     */
 
     private void buyCustomSushi() {
         boolean success = false;
@@ -88,6 +107,9 @@ public class SpecialFeatureController implements ActionListener, ListSelectionLi
 
     }
 
+    /**
+     * Buys an item from the vending machine.
+     */
     private void buyItem() {
         boolean success = false;
         Money change = new Money();
@@ -135,6 +157,11 @@ public class SpecialFeatureController implements ActionListener, ListSelectionLi
             popMessage("Enter a quantity greater than 0!", "Buying Unsuccessful", 0);
     }
 
+    /**
+     * Handles the actionPerformed event for buttons in the SpecialFeatureGUI.
+     *
+     * @param e The ActionEvent.
+     */
     @Override
     public void actionPerformed(ActionEvent e) {
         String[] denominations = {"100", "50", "20", "10", "5", "1"};
@@ -194,6 +221,13 @@ public class SpecialFeatureController implements ActionListener, ListSelectionLi
         }
     }
 
+    /**
+     * Displays a message dialog box with an optional icon.
+     *
+     * @param message The message to display.
+     * @param title   The title of the dialog box.
+     * @param type    The type of the dialog box (1 for info, 0 for error).
+     */
     public void popMessage(String message, String title, int type) {
         if (type == 1)
             JOptionPane.showMessageDialog(null, message, title, type, new ImageIcon("src/images/iconVM.png"));

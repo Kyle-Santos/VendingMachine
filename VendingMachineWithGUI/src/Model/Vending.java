@@ -112,19 +112,40 @@ public class Vending {
         return this.name;
     }
 
+    /**
+     * Returns the inventory of the vending machine.
+     *
+     * @return the inventory of the vending machine
+     */
     public Inventory getInventory() {
         return this.inventory;
     }
 
+    /**
+     * Returns the current money available in the vending machine.
+     *
+     * @return the current money available in the vending machine
+     */
     public Money getMoney()
     {
         return this.money;
     }
 
+    /**
+     * Returns the money that has been inserted into the vending machine.
+     *
+     * @return the money that has been inserted into the vending machine
+     */
     public Money getInsertedMoney() {
         return this.insertedMoney;
     }
 
+    /**
+     * Returns the selected item at the specified index in the vending machine inventory.
+     *
+     * @param index the index of the item in the inventory
+     * @return the selected item if found, null otherwise
+     */
     public Item getSelectedItem(int index) {
         return inventory.getSlot().get(index);
     }

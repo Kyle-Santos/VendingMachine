@@ -14,11 +14,20 @@ import Model.Money;
 import Model.VendingCollection;
 import View.MaintenanceGUI;
 
+/**
+ * The MaintenanceController class handles user interactions and events from the MaintenanceGUI.
+**/
 public class MaintenanceController implements ActionListener, ListSelectionListener, ChangeListener { 
     private MaintenanceGUI gui;
     private VendingCollection vendings;
     private Money insert;
 
+    /**
+     * Creates a new MaintenanceController instance.
+     *
+     * @param gui      The MaintenanceGUI to be controlled.
+     * @param vendings The VendingCollection model.
+    **/
     public MaintenanceController(MaintenanceGUI gui, VendingCollection vendings) {
         this.gui = gui;
         this.vendings = vendings;
@@ -32,44 +41,50 @@ public class MaintenanceController implements ActionListener, ListSelectionListe
         gui.setTxtMoney(vendings.getCurrentVending().getMoney().getTotalAmount());
     }
 
+    /**
+     * Updates the inventory view in the GUI.
+    **/
     public void updateInventoryView() {
         gui.setListItems(vendings.getCurrentVending().getInventory());
     }
     
+    /**
+     * Converts a string to an integer.
+     *
+     * @param s The string to convert.
+     * @return The converted integer value, or -1 if the conversion fails.
+    **/
     public int convertToInt(String s) {
-        int converted = -1;
-
         try {
-            converted = Integer.parseInt(s);
+            return Integer.parseInt(s);
+        } catch (NumberFormatException e) {
+            return -1;
         }
-        catch (NumberFormatException e) {
-
-        }
-
-        return converted;
     }
 
-    @Override
-    public void actionPerformed(ActionEvent e) {
-        String[] denominations = {"100", "50", "20", "10", "5", "1"};
-        int qty, price;
-
-        if (e.getActionCommand().equals("Restock Item")) {
-            qty = convertToInt(gui.getSpinnerAddQty());
+    /**
+     * Restocks the selected item with the specified quantity.
+    **/
+    private void restockItem() {
+        int qty = convertToInt(gui.getSpinnerAddQty());
             
-            if (qty > 0) {
-                vendings.getCurrentVending().restockItem(gui.getSelectedIndexListItems(), qty);
-                popMessage("Successfully Added Quantity To:\n" + (vendings.getCurrentVending().getSelectedItem(gui.getSelectedIndexListItems())), "Succesful", 1);
-                updateInventoryView();
-            }
-            else 
-                popMessage("Enter An Integer Greater than 0", "Invalid Input", 0);
-
-            gui.setAttributesFunction(false);
-            gui.clearListSelected();
+        if (qty > 0) {
+            vendings.getCurrentVending().restockItem(gui.getSelectedIndexListItems(), qty);
+            popMessage("Successfully Added Quantity To:\n" + (vendings.getCurrentVending().getSelectedItem(gui.getSelectedIndexListItems())), "Succesful", 1);
+            updateInventoryView();
         }
-        else if (e.getActionCommand().equals("Update")) {
-            price = convertToInt(gui.getTfNewPrice());
+        else 
+            popMessage("Enter An Integer Greater than 0", "Invalid Input", 0);
+
+        gui.setAttributesFunction(false);
+        gui.clearListSelected();
+    }
+
+    /**
+     * Updates the price of the selected item with the specified value.
+     */
+    private void updatePrice() {
+        int price = convertToInt(gui.getTfNewPrice());
 
             if (price > 0) {
                 vendings.getCurrentVending().updatePrice(gui.getSelectedIndexListItems(), price);
@@ -81,55 +96,81 @@ public class MaintenanceController implements ActionListener, ListSelectionListe
             
             gui.setAttributesFunction(false);
             gui.clearListSelected();
-        }
-        else if (e.getActionCommand().equals("Collect")) {
-            Money collected = vendings.getCurrentVending().getMoney();
-            if (gui.getCheckSure()) {
-                if (collected.getTotalAmount() > 0) {
-                    popMessage("Money (" + collected.getTotalAmount() + ") was collected", "Collect oney Successful", 1);
-                    vendings.getCurrentVending().getMoney().resetMoney();
-                    gui.setTxtMoney(collected.getTotalAmount());
-                }
-                else
-                    popMessage("Nothing To Collect.", "Unsuccessful", 0);
+    }
+
+    /**
+     * Collects the money from the vending machine.
+    **/
+    private void collectMoney() {
+        Money collected = vendings.getCurrentVending().getMoney();
+        if (gui.getCheckSure()) {
+            if (collected.getTotalAmount() > 0) {
+                popMessage("Money (" + collected.getTotalAmount() + ") was collected", "Collect oney Successful", 1);
+                vendings.getCurrentVending().getMoney().resetMoney();
+                gui.setTxtMoney(collected.getTotalAmount());
             }
             else
-                popMessage("Check The Verification Box First.", "Collect Money Unsuccessful", 0);
+                popMessage("Nothing To Collect.", "Unsuccessful", 0);
         }
-        else if (e.getActionCommand().equals("Add Item")) {
-            String name = gui.getTfName(); 
-            String txtcalories = gui.getTfCalories();
-            String txtnewQty = gui.getSpinnerNewQty();
-            String txtcost = gui.getTfCost();
-            double calories = 0;
-            int newQty = 0, cost = 0;
-            boolean valid = true;
+        else
+            popMessage("Check The Verification Box First.", "Collect Money Unsuccessful", 0);
+    }
 
-            if (!(name.equals("") || txtcalories.equals("") || txtnewQty.equals("") || txtcost.equals(""))) {
-                try {
-                    calories = Double.parseDouble(txtcalories);
-                    newQty = Integer.parseInt(txtnewQty);
-                    cost = Integer.parseInt(txtcost);
-                }
-                catch (NumberFormatException n) {
-                    valid = false;
-                    popMessage("Invalid Input. Enter valid inputs.", "Add Item Unsuccesful", 0);
-                }
+    /**
+     * Adds a new item to the inventory.
+    **/
+    private void addItem() {
+        String name = gui.getTfName(); 
+        String txtcalories = gui.getTfCalories();
+        String txtnewQty = gui.getSpinnerNewQty();
+        String txtcost = gui.getTfCost();
+        double calories = 0;
+        int newQty = 0, cost = 0;
+        boolean valid = true;
 
-                if (valid) {
-                    if (cost > 0 && newQty >= 0 && calories > 0) {
-                        vendings.getCurrentVending().getInventory().addItem(name, calories, cost, newQty, gui.getItemType());
-                        gui.setListItems(vendings.getCurrentVending().getInventory());
-                        popMessage(name + " with " + calories + " calories is successfully added!", "Add Item Successful", 1);
-                    }
-                    else
-                        popMessage("Invalid input. Enter integers greater than 0.", "Add Item Unsuccesful", 0);
-                }
-                    
+        if (!(name.equals("") || txtcalories.equals("") || txtnewQty.equals("") || txtcost.equals(""))) {
+            try {
+                calories = Double.parseDouble(txtcalories);
+                newQty = Integer.parseInt(txtnewQty);
+                cost = Integer.parseInt(txtcost);
             }
-            else 
-                popMessage("Complete All The Fields", "Add Item Unsuccesful", 0);
+            catch (NumberFormatException n) {
+                valid = false;
+                popMessage("Invalid Input. Enter valid inputs.", "Add Item Unsuccesful", 0);
+            }
+
+            if (valid) {
+                if (cost > 0 && newQty >= 0 && calories > 0) {
+                    vendings.getCurrentVending().getInventory().addItem(name, calories, cost, newQty, gui.getItemType());
+                    gui.setListItems(vendings.getCurrentVending().getInventory());
+                    popMessage(name + " with " + calories + " calories is successfully added!", "Add Item Successful", 1);
+                }
+                else
+                    popMessage("Invalid input. Enter integers greater than 0.", "Add Item Unsuccesful", 0);
+            }
+                
         }
+        else 
+            popMessage("Complete All The Fields", "Add Item Unsuccesful", 0);
+    }
+
+    /**
+     * Handles the actionPerformed event for buttons in the MaintenanceGUI.
+     *
+     * @param e The ActionEvent.
+     */
+    @Override
+    public void actionPerformed(ActionEvent e) {
+        String[] denominations = {"100", "50", "20", "10", "5", "1"};
+
+        if (e.getActionCommand().equals("Restock Item")) 
+            restockItem();
+        else if (e.getActionCommand().equals("Update")) 
+            updatePrice();
+        else if (e.getActionCommand().equals("Collect")) 
+            collectMoney();
+        else if (e.getActionCommand().equals("Add Item")) 
+            addItem();
         else if (e.getActionCommand().equals("ADD")) {
             if (insert.getTotalAmount() == 0)
                 popMessage("You need to add any denominations first!", "Inserting Unsuccessful", 0);
@@ -150,14 +191,6 @@ public class MaintenanceController implements ActionListener, ListSelectionListe
                 }
             }
         }
-
-    }
-
-    public void popMessage(String message, String title, int type) {
-        if (type == 1)
-            JOptionPane.showMessageDialog(null, message, title, type, new ImageIcon("src/images/iconVM.png"));
-        else 
-            JOptionPane.showMessageDialog(null, message, title, JOptionPane.ERROR_MESSAGE);
 
     }
 
@@ -184,6 +217,21 @@ public class MaintenanceController implements ActionListener, ListSelectionListe
                 gui.clearListSelected();
             }
         }
+    }
+
+    /**
+     * Displays a message dialog box with an optional icon.
+     *
+     * @param message The message to display.
+     * @param title   The title of the dialog box.
+     * @param type    The type of the dialog box (1 for info, 0 for error).
+    **/
+    private void popMessage(String message, String title, int type) {
+        if (type == 1)
+            JOptionPane.showMessageDialog(null, message, title, type, new ImageIcon("src/images/iconVM.png"));
+        else 
+            JOptionPane.showMessageDialog(null, message, title, JOptionPane.ERROR_MESSAGE);
+
     }
     
 }

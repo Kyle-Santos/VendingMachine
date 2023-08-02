@@ -13,11 +13,20 @@ import View.MaintenanceGUI;
 import View.SpecialFeatureGUI;
 import View.VendingFeatureGUI;
 
-
-public class MainMenuController implements ActionListener { 
+/**
+ * The MainMenuController class is responsible for handling actions and events
+ * from the MainMenuGUI class and coordinating with the VendingCollection model.
+ */
+public class MainMenuController implements ActionListener {
     private MainMenuGUI gui;
     private VendingCollection vendings;
 
+    /**
+     * Constructor to create a MainMenuController.
+     *
+     * @param gui      The MainMenuGUI instance.
+     * @param vendings The VendingCollection instance.
+     */
     public MainMenuController(MainMenuGUI gui, VendingCollection vendings) {
         this.gui = gui;
         this.vendings = vendings;
@@ -25,15 +34,17 @@ public class MainMenuController implements ActionListener {
         gui.setActionListener(this);
     }
 
-    public void updateView() {
-
-    }
-
+    /**
+     * Handles the actionPerformed event for buttons in the MainMenuGUI.
+     *
+     * @param e The ActionEvent.
+     */
     @Override
     public void actionPerformed(ActionEvent e) {
         int selected = gui.getSelectedVM() - 1;
+        String action = e.getActionCommand();
 
-        if (e.getActionCommand().equals("Regular")) {
+        if (action.equals("Regular")) {
             if (vendings.checkIfNameExists(gui.getTfVendingName()))
                 popMessage("Enter a unique name.", "Creation Unsuccessful", selected);
             else {
@@ -41,8 +52,7 @@ public class MainMenuController implements ActionListener {
                 popMessage("Vending Machine\n" + gui.getTfVendingName() + "\nSuccessfully Created!", "Creation Successful", 1);
                 gui.addVMList(gui.getTfVendingName());
             }
-        }
-        else if (e.getActionCommand().equals("Special")) {
+        } else if (action.equals("Special")) {
             if (vendings.checkIfNameExists(gui.getTfVendingName()))
                 popMessage("Enter a unique name.", "Creation Unsuccessful", selected);
             else {
@@ -50,45 +60,43 @@ public class MainMenuController implements ActionListener {
                 popMessage("Special Vending Machine\n" + gui.getTfVendingName() + "\nSuccessfully Created!", "Creation Successful", 1);
                 gui.addVMList(gui.getTfVendingName());
             }
-        }
-        else if (e.getActionCommand().equals("List Available VMs")) {
+        } else if (action.equals("List Available VMs")) {
             popMessage(vendings.listVendings(), "Vending Machines", 1);
-        }
-        else if (e.getActionCommand().equals("Exit")) {
+        } else if (action.equals("Exit")) {
             System.exit(0);
-        }
-        else if (selected >= 0) {
-            if (e.getActionCommand().equals("Features")) {
+        } else if (selected >= 0) {
+            if (action.equals("Features")) {
                 vendings.setCurrent(selected);
 
                 if (vendings.getCurrentVending() instanceof SpecialVending) {
                     SpecialVending specialVend = (SpecialVending) vendings.getCurrentVending();
                     SpecialFeatureGUI specialFeature = new SpecialFeatureGUI();
                     new SpecialFeatureController(specialFeature, specialVend);
-                }
-                else {
+                } else {
                     VendingFeatureGUI feature = new VendingFeatureGUI();
                     new VendingFeatureController(feature, vendings);
                 }
-            }
-            else {
+            } else {
                 vendings.setCurrent(selected);
                 MaintenanceGUI maintenance = new MaintenanceGUI();
-
                 new MaintenanceController(maintenance, vendings);
             }
-        }
-        else
+        } else
             popMessage("Select A Vending Machine First.", "Select Vending Machine", 0);
-        
     }
 
-    public void popMessage(String message, String title, int type) {
+    /**
+     * Displays a message dialog box with an optional icon.
+     *
+     * @param message The message to display.
+     * @param title   The title of the dialog box.
+     * @param type    The type of the dialog box (1 for info, 0 for error).
+     */
+    private void popMessage(String message, String title, int type) {
         if (type == 1)
             JOptionPane.showMessageDialog(null, message, title, type, new ImageIcon("src/images/iconVM.png"));
-        else 
+        else
             JOptionPane.showMessageDialog(null, message, title, JOptionPane.ERROR_MESSAGE);
-
     }
-    
+
 }

@@ -101,7 +101,7 @@ public class Money {
      * @param key   the denomination
      * @param value the value to deduct
      */
-    public void deductDenomination(int key, int value) {
+    private void deductDenomination(int key, int value) {
         int val = denominations.get(key);
         denominations.replace(key, value - val);
         totalAmount -= key * value;
@@ -119,6 +119,9 @@ public class Money {
         totalAmount += key * value;
     }
 
+    /**
+     * Resets the money object to have zero denominations and total amount.
+     */
     public void resetMoney() {
         denominations.replace(100, 0);
         denominations.replace(50, 0);
@@ -148,6 +151,11 @@ public class Money {
         return denominations;
     }
 
+    /**
+     * Sets the money object with the specified money.
+     *
+     * @param money the Money object to set the money from
+     */
     public void setMoney(Money money) {
         this.denominations = money.denominations;
         this.totalAmount = money.totalAmount;

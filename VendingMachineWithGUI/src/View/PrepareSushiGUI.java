@@ -14,9 +14,19 @@ import javax.swing.Timer;
 
 import Model.SpecialVending;
 
+/**
+ * The PrepareSushiGUI class represents the GUI for preparing sushi using a SpecialVending machine.
+ * It extends JFrame and displays the steps involved in preparing sushi with a progress bar.
+ */
 public class PrepareSushiGUI extends JFrame{
     private ArrayList<String> steps;
 
+    /**
+     * Creates a new PrepareSushiGUI instance.
+     * Initializes the GUI for preparing sushi with the provided SpecialVending machine.
+     *
+     * @param vending The SpecialVending machine used to prepare sushi.
+     */
     public PrepareSushiGUI(SpecialVending vending) {
         super("Preparing Your Sushi");
 
@@ -55,7 +65,7 @@ public class PrepareSushiGUI extends JFrame{
         JTextArea textStep = new JTextArea();
         textStep.setForeground(new Color(232, 234, 234));
         textStep.setBackground(new Color(79, 79, 79));
-        textStep.setBounds(76, 67, 185, 300);
+        textStep.setBounds(56, 67, 205, 300);
         panelCenter.add(textStep);
         
         Timer timer = new Timer(500, new ActionListener() {

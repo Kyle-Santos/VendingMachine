@@ -111,6 +111,11 @@ public class Item {
         return cost;
     }
 
+    /**
+     * Returns the type of this item.
+     *
+     * @return the type of this item
+     */
     public String getType() {
         return this.type;
     }

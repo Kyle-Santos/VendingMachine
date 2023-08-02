@@ -3,7 +3,8 @@ import Model.VendingCollection;
 import View.MainMenuGUI;
 
 /**
- * This class is used to drive the VendingCollection and provides a simple textual menu for users.
+ * The main class that starts the Vending Machine Simulator.
+ * This class is used to drive the VendingCollection, MainMenuGUI, and provide a graphical user menu for users.
  */
 public class Driver {
 

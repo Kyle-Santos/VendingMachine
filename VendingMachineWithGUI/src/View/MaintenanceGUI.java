@@ -25,19 +25,26 @@ import javax.swing.event.ListSelectionListener;
 import Model.Inventory;
 import Model.Item;
 
+/**
+ * The MaintenanceGUI class represents the maintenance GUI of the Vending Machine Factory Simulator.
+ * It extends JFrame and provides the user interface for performing maintenance tasks on the vending machine.
+ */
 public class MaintenanceGUI extends JFrame {
 	private JTabbedPane tabbedPane;
 
+    // Update Pane
 	private JButton btnRestock;
 	private JButton btnUpdate;
 	private JSpinner spinnerAddQty;
 	private JTextField tfNewPrice;
 	private JList<String> listItems;
 
+    // Collect Money Pane
 	private JTextField txtMoney;
 	private JButton btnCollect;
 	private JCheckBox checkSure;
 
+    // Insert Money Pane
 	private JButton btn1;
     private JButton btn5;
     private JButton btn10;
@@ -47,6 +54,7 @@ public class MaintenanceGUI extends JFrame {
     private JLabel labelAmount;
     private JButton btnInsertMoney;
 
+    // Add Item Pane
     private JTextField tfName;
     private JTextField tfCalories;
     private JTextField tfCost;
@@ -54,6 +62,10 @@ public class MaintenanceGUI extends JFrame {
 	private JButton btnAddItem;
     private JComboBox<String> itemType;
 
+    /**
+     * Creates a new MaintenanceGUI instance.
+     * Initializes the maintenance user interface.
+     */
     public MaintenanceGUI() {
         super("Vending Machine Factory Simulator");
         
@@ -268,6 +280,11 @@ public class MaintenanceGUI extends JFrame {
         getContentPane().add(tabbedPane);
     }
 
+    /**
+     * Sets an ActionListener to handle button clicks.
+     *
+     * @param listener The ActionListener to be set.
+     */
 	public void setActionListener(ActionListener listener) {
 		btnRestock.addActionListener(listener);
 		btnUpdate.addActionListener(listener);
@@ -285,22 +302,66 @@ public class MaintenanceGUI extends JFrame {
         btnAddItem.addActionListener(listener);
     }
 
+    /**
+     * Sets a ListSelectionListener to handle changes in the list of items.
+     *
+     * @param listener The ListSelectionListener to be set.
+     */
+    public void setListSelectionListener(ListSelectionListener listener) {
+        listItems.addListSelectionListener(listener);
+    } 
+
+    /**
+     * Sets a ChangeListener to handle changes in components.
+     *
+     * @param listener The ChangeListener to be set.
+     */
+    public void setChangeListener(ChangeListener listener) {
+        tabbedPane.addChangeListener(listener);
+		checkSure.addChangeListener(listener);
+    }
+
+    /**
+     * Gets the index of the selected item in the list of items.
+     *
+     * @return The index of the selected item in the list of items.
+     */
 	public int getSelectedIndexListItems() {
         return this.listItems.getSelectedIndex();
     }
 
+    /**
+     * Gets the tabbed pane component.
+     *
+     * @return The tabbed pane component.
+     */
 	public JTabbedPane getTabbedPane() {
         return this.tabbedPane;
     }
 
+    /**
+     * Gets the quantity to be added from the spinner component.
+     *
+     * @return The quantity to be added as a string.
+     */
 	public String getSpinnerAddQty() {
 		return this.spinnerAddQty.getValue().toString();
 	}
 
+    /**
+     * Gets the new price of the item from the text field.
+     *
+     * @return The new price of the item as a string.
+     */
 	public String getTfNewPrice() {
 		return this.tfNewPrice.getText();
 	}
 
+    /**
+     * Checks whether the "Are You Sure" checkbox is selected.
+     *
+     * @return True if the checkbox is selected, false otherwise.
+     */
 	public boolean getCheckSure() {
 		return this.checkSure.isSelected();
 	}
@@ -325,19 +386,15 @@ public class MaintenanceGUI extends JFrame {
         return this.itemType.getSelectedItem().toString();
     }
 
-    public void setListSelectionListener(ListSelectionListener listener) {
-        listItems.addListSelectionListener(listener);
-    } 
-
-    public void setChangeListener(ChangeListener listener) {
-        tabbedPane.addChangeListener(listener);
-		checkSure.addChangeListener(listener);
-    }
-
 	public void clearListSelected() {
         this.listItems.clearSelection();
     }
 
+    /**
+     * Sets the attributes of certain components based on the given enable flag.
+     *
+     * @param enable If true, the components will be enabled; otherwise, they will be disabled.
+     */
     public void setAttributesFunction(boolean enable) {
         this.btnRestock.setEnabled(enable);
 		this.btnUpdate.setEnabled(enable);
@@ -345,6 +402,11 @@ public class MaintenanceGUI extends JFrame {
         this.tfNewPrice.setEditable(enable);
     }
 
+    /**
+     * Sets the list of items in the JList component based on the given Inventory object.
+     *
+     * @param slots The Inventory object containing the list of items to be displayed.
+     */
 	public void setListItems(Inventory slots) {
         // list model
         DefaultListModel<String> listModel = new DefaultListModel<String>();
