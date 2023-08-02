@@ -11,7 +11,7 @@ import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
 
 import Model.Money;
-import Model.VendingCollection;
+import Model.Vending;
 import View.MaintenanceGUI;
 
 /**
@@ -19,33 +19,34 @@ import View.MaintenanceGUI;
 **/
 public class MaintenanceController implements ActionListener, ListSelectionListener, ChangeListener { 
     private MaintenanceGUI gui;
-    private VendingCollection vendings;
+    private Vending vending;
     private Money insert;
 
     /**
      * Creates a new MaintenanceController instance.
      *
      * @param gui      The MaintenanceGUI to be controlled.
-     * @param vendings The VendingCollection model.
+     * @param vending  The Selected Vending model.
     **/
-    public MaintenanceController(MaintenanceGUI gui, VendingCollection vendings) {
+    public MaintenanceController(MaintenanceGUI gui, Vending vending) {
         this.gui = gui;
-        this.vendings = vendings;
+        this.vending = vending;
         this.insert = new Money();
 
         gui.setActionListener(this);
         gui.setListSelectionListener(this);
         gui.setChangeListener(this);
 
-        gui.setListItems(vendings.getCurrentVending().getInventory());
-        gui.setTxtMoney(vendings.getCurrentVending().getMoney().getTotalAmount());
+        gui.setListItems(vending.getSlots());
+        gui.setTxtMoney(vending.getMoney().getTotalAmount());
+        gui.setTextTransaction(vending.getTransactionList());
     }
 
     /**
      * Updates the inventory view in the GUI.
     **/
     public void updateInventoryView() {
-        gui.setListItems(vendings.getCurrentVending().getInventory());
+        gui.setListItems(vending.getSlots());
     }
     
     /**
@@ -69,8 +70,8 @@ public class MaintenanceController implements ActionListener, ListSelectionListe
         int qty = convertToInt(gui.getSpinnerAddQty());
             
         if (qty > 0) {
-            vendings.getCurrentVending().restockItem(gui.getSelectedIndexListItems(), qty);
-            popMessage("Successfully Added Quantity To:\n" + (vendings.getCurrentVending().getSelectedItem(gui.getSelectedIndexListItems())), "Succesful", 1);
+            vending.restockItem(gui.getSelectedIndexListItems(), qty);
+            popMessage("Successfully Added Quantity To:\n" + (vending.getItemInfo(gui.getSelectedIndexListItems())), "Succesful", 1);
             updateInventoryView();
         }
         else 
@@ -87,8 +88,8 @@ public class MaintenanceController implements ActionListener, ListSelectionListe
         int price = convertToInt(gui.getTfNewPrice());
 
             if (price > 0) {
-                vendings.getCurrentVending().updatePrice(gui.getSelectedIndexListItems(), price);
-                popMessage("Successfully Updated The Price Of:\n" + (vendings.getCurrentVending().getInventory().getSlot().get(gui.getSelectedIndexListItems())), "Succesful", 1);
+                vending.updatePrice(gui.getSelectedIndexListItems(), price);
+                popMessage("Successfully Updated The Price Of:\n" + (vending.getItemInfo(gui.getSelectedIndexListItems())), "Succesful", 1);
                 updateInventoryView();
             }
             else
@@ -102,11 +103,11 @@ public class MaintenanceController implements ActionListener, ListSelectionListe
      * Collects the money from the vending machine.
     **/
     private void collectMoney() {
-        Money collected = vendings.getCurrentVending().getMoney();
+        Money collected = vending.getMoney();
         if (gui.getCheckSure()) {
             if (collected.getTotalAmount() > 0) {
                 popMessage("Money (" + collected.getTotalAmount() + ") was collected", "Collect oney Successful", 1);
-                vendings.getCurrentVending().getMoney().resetMoney();
+                vending.getMoney().resetMoney();
                 gui.setTxtMoney(collected.getTotalAmount());
             }
             else
@@ -140,9 +141,9 @@ public class MaintenanceController implements ActionListener, ListSelectionListe
             }
 
             if (valid) {
-                if (cost > 0 && newQty >= 0 && calories > 0) {
-                    vendings.getCurrentVending().getInventory().addItem(name, calories, cost, newQty, gui.getItemType());
-                    gui.setListItems(vendings.getCurrentVending().getInventory());
+                if (cost > 0 && newQty > 0 && calories > 0) {
+                    vending.addItem(name, calories, cost, newQty, gui.getItemType());
+                    gui.setListItems(vending.getSlots());
                     popMessage(name + " with " + calories + " calories is successfully added!", "Add Item Successful", 1);
                 }
                 else
@@ -175,11 +176,11 @@ public class MaintenanceController implements ActionListener, ListSelectionListe
             if (insert.getTotalAmount() == 0)
                 popMessage("You need to add any denominations first!", "Inserting Unsuccessful", 0);
             else {
-                vendings.getCurrentVending().getMoney().updateDenominations(insert);
+                vending.getMoney().updateDenominations(insert);
                 popMessage("Money (" + (insert.getTotalAmount())  + " Pesos) Successfully Added!", "Inserting Successful", 1);
                 insert.resetMoney();
                 gui.setLabelAmount(insert.getTotalAmount());
-                gui.setTxtMoney(vendings.getCurrentVending().getMoney().getTotalAmount());
+                gui.setTxtMoney(vending.getMoney().getTotalAmount());
             }
         } 
         else {

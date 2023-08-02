@@ -2,6 +2,8 @@ package Controller;
 
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.ItemEvent;
+import java.awt.event.ItemListener;
 
 import javax.swing.ImageIcon;
 import javax.swing.JOptionPane;
@@ -10,103 +12,232 @@ import javax.swing.event.ChangeListener;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
 
-import Model.Item;
 import Model.Money;
-import Model.VendingCollection;
+import Model.Slot;
+import Model.SpecialVending;
+import Model.Vending;
+import View.PrepareSushiGUI;
 import View.VendingFeatureGUI;
 
 /**
  * The VendingFeatureController class handles user interactions and events from the VendingFeatureGUI.
  */
-public class VendingFeatureController implements ActionListener, ListSelectionListener, ChangeListener { 
+public class VendingFeatureController implements ActionListener, ListSelectionListener, ChangeListener, ItemListener { 
     private VendingFeatureGUI gui;
-    private VendingCollection vendings;
+    private Vending vending;
+    private SpecialVending specialVending;
     private Money insert;
 
     /**
      * Creates a new VendingFeatureController instance.
      *
-     * @param gui      The VendingFeatureGUI to be controlled.
-     * @param vendings The VendingCollection model.
+     * @param gui     The VendingFeatureGUI to be controlled.
+     * @param vending The Vending model.
      */
-    public VendingFeatureController(VendingFeatureGUI gui, VendingCollection vendings) {
+    public VendingFeatureController(VendingFeatureGUI gui, Vending vending) {
         this.gui = gui;
-        this.vendings = vendings;
+        this.vending = vending;
         this.insert = new Money();
+
+        // if vending machine is a special vm, enables the feature of special vending machine
+        if (vending instanceof SpecialVending) {
+            this.specialVending = (SpecialVending) vending;
+            gui.enableCustomizePanel();
+            gui.setComboBoxes(vending.getSlots());
+            gui.setItemChangeListener(this);
+        }   
+
+        gui.setListItems(vending.getSlots());
 
         gui.setActionListener(this);
         gui.setListSelectionListener(this);
         gui.setChangeListener(this);
-
-        gui.setListItems(vendings.getCurrentVending().getInventory());
     }
 
     /**
-     * Handles the item purchase process.
+     * Updates the receipt in the GUI.
+     */
+    private void updateReceipt() {
+        gui.setReceipt(specialVending.getListItems());
+    }
+
+    /**
+     * Converts a string to an integer.
+     *
+     * @param convert The string to convert.
+     * @return The converted integer value, or 0 if the conversion fails.
+     */
+    private int convertToInt(String convert) {
+        try {
+            return Integer.parseInt(convert);
+        } catch (NumberFormatException error) {
+            popMessage("Enter a valid Integer!", "Error: Unsuccessful", 0);
+            return 0;
+        }
+    }
+
+    /**
+     * Buys a custom sushi from the vending machine.
+     */
+    private void buyCustomSushi() {
+        boolean success = false;
+        Money change = new Money();
+        int totalCost = specialVending.getTotalCostSushi();
+
+        // if user entered cost is less than or equal total cost then show message
+        if (vending.getInsertedMoney().getTotalAmount() < totalCost) {
+            popMessage("Money inserted is insufficient. \nTotal cost is ₱" + totalCost + "\n\nYour Money\n" + 
+            insert.listDenominations() + "is returned to you.", "Buying Unsuccessful", 0);
+        } 
+        else if (vending.getMoney().getTotalAmount() >= totalCost) {
+            vending.getMoney().updateDenominations(insert);
+            totalCost = insert.getTotalAmount() - totalCost; 
+            success = vending.getMoney().generateChange(change, totalCost);
+
+            if (success) { 
+                new PrepareSushiGUI(specialVending);
+                System.out.println("\nProcessing the amount... \nBuying...");
+                System.out.println("Buying Sucessful....\nDispensing Item/s Now......\n");
+                popMessage("You have bought item successfully.\n" + (vending.printSold("Specially For You Sushi", 1, change)), "Buying Successful", 1);
+                
+            } 
+            else {
+                popMessage("Sorry unable to sell this item.\nYour Money\n" + insert.listDenominations() + 
+                "is returned to you.", "Buying Unsuccessful", 0);
+            }
+        }
+        else
+            popMessage("Money in the machine is not\nenough to produce change.\n\nYour Money\n" + 
+            insert.listDenominations() + "is returned to you.", "Buying Unsuccessful", 0);
+    
+
+        // update list after purchase
+        vending.getInsertedMoney().resetMoney();
+        gui.setListItems(vending.getSlots());
+
+        // update inserted money view 
+        insert.resetMoney();
+        gui.setLabelAmount(insert.getTotalAmount());
+
+    }
+
+    /**
+     * Buys an item from the vending machine.
      */
     private void buyItem() {
-        int quantity = 0;
         boolean success = false;
-            
-        try {
-            quantity = Integer.parseInt(gui.getTfQuantity());
-            success = true;
-        } catch (NumberFormatException error) {
-            popMessage("Enter a valid quantity!", "Buying Unsuccessful", 0);
-        }
+        Money change = new Money();
+        int quantity = convertToInt(gui.getTfQuantity());
+        Slot itemToBuy = vending.getSlots().get(gui.getSelectedItem());
+        String itemName = vending.getItems().get(gui.getSelectedItem()).getName();
+        int totalCost = itemToBuy.getCost() * quantity; // get total cost
 
-        if (success) {
-            success = false;
-            if (quantity > 0) {
-                // if user has selected higher quantity than available
-                Item itemToBuy = vendings.getCurrentVending().getInventory().getSlot().get(gui.getSelectedItem());
-                if (quantity > itemToBuy.getQuantity()) {
-                    popMessage("Not enough quantity available to sold.", "Buying Unsuccessful", 0);
+        if (quantity > 0) {
+            // if user has selected higher quantity than available
+            if (quantity > itemToBuy.getQuantity()) {
+                popMessage("Not enough quantity available to sold.", "Buying Unsuccessful", 0);
+            } 
+            else {
+                // if user entered cost is less than or equal total cost then show message
+                if (vending.getInsertedMoney().getTotalAmount() < totalCost) {
+                    popMessage("Money inserted is insufficient. \nTotal cost is ₱" + totalCost + "\n\nYour Money\n" + 
+                    insert.listDenominations() + "is returned to you.", "Buying Unsuccessful", 0);
                 } 
-                else {
-                    Money change = new Money();
-                    // get total cost
-                    int totalCost = itemToBuy.getCost() * quantity;
+                else if (vending.getMoney().getTotalAmount() >= totalCost || totalCost == insert.getTotalAmount()) {
+                    vending.getMoney().updateDenominations(insert);
+                    totalCost = itemToBuy.buyItem(quantity, insert.getTotalAmount());
 
-                    // if user entered cost is less than or equal total cost then show message
-                    if (vendings.getCurrentVending().getInsertedMoney().getTotalAmount() < totalCost) {
-                        popMessage("Money inserted is insufficient. Total cost is ₱" + totalCost, "Buying Unsuccessful", 0);
+                    success = vending.getMoney().generateChange(change, totalCost);
+
+                    if (success) {
+                        System.out.println("\nProcessing the amount... \nBuying...");
+                        System.out.println("Buying Sucessful....\nDispensing Item/s Now......\n");
+                        popMessage("You have bought item successfully.\n" + (vending.printSold(itemName, quantity, change)), "Buying Successful", 1);
                     } 
-                    else if (vendings.getCurrentVending().getMoney().getTotalAmount() >= totalCost) {
-                        vendings.getCurrentVending().getMoney().updateDenominations(insert);
-                        totalCost = itemToBuy.buyItem(quantity, insert.getTotalAmount());
-
-                        success = vendings.getCurrentVending().getMoney().generateChange(change, totalCost);
-
-                        if (success) {
-                            System.out.println("\nProcessing the amount... \nBuying...");
-                            vendings.getCurrentVending().printSold(itemToBuy.getName(), quantity, change);
-                            System.out.println("Buying Sucessful....\nDispensing Item/s Now......\n");
-                            popMessage("You have bought item successfully.", "Buying Successful", 1);
-                            
-                        } else {
-                            System.out.println("\nYour Money\n" + insert.listDenominations()
-                                    + "is being returned...\n\nFailed to buy.");
-                            popMessage("Sorry unable to sell this item.", "Buying Unsuccessful", 0);
-                        }
+                    else {
+                        popMessage("Sorry unable to sell this item.\n\nYour Money\n" + insert.listDenominations() + 
+                        "is returned to you.", "Buying Unsuccessful", 0);
                     }
-                    else
-                        popMessage("Money in the machine is not enough to produce change.", "Buying Unsuccessful", 0);
-
-                    System.out.println(totalCost);
                 }
+                else
+                    popMessage("Money in the machine is not\nenough to produce change.\n\nYour Money\n" + 
+                    insert.listDenominations() + "is returned to you.", "Buying Unsuccessful", 0);
+            }
 
                 // update list after purchase
-                vendings.getCurrentVending().getInsertedMoney().resetMoney();
-                gui.setListItems(vendings.getCurrentVending().getInventory());
+                vending.getInsertedMoney().resetMoney();
+                gui.setListItems(vending.getSlots());
 
-            }
-            else
-                popMessage("Enter a quantity greater than 0!", "Buying Unsuccessful", 0);
+                // update inserted money view 
+                insert.resetMoney();
+                gui.setLabelAmount(insert.getTotalAmount());
         }
+        else
+            popMessage("Enter a quantity greater than 0!", "Buying Unsuccessful", 0);
+    }
 
-        gui.clearListSelected();
-        gui.setAttributesFunction(false);
+    /**
+     * Handles the actionPerformed event for buttons in the SpecialFeatureGUI.
+     *
+     * @param e The ActionEvent.
+     */
+    @Override
+    public void actionPerformed(ActionEvent e) {
+        String[] denominations = {"100", "50", "20", "10", "5", "1"};
+        int currInsert = insert.getTotalAmount();
+        String action = e.getActionCommand();
+        int quantity = -1;
+
+        if (action.equals("Add")) {
+            quantity = convertToInt(gui.getTfQtyCustom());
+            System.out.println(quantity);
+
+            if (quantity > 0) {
+                if (specialVending.addTopping(vending.getItems().get(gui.getTopping()).getName(), quantity))
+                    updateReceipt();
+                else
+                    popMessage("Quantity available is not enough.", "Unsuccesful", 0);
+            }
+
+            gui.clearListSelected();
+            gui.setAttributesFunction(false);
+        }
+        else if (action.equals("Create")) {
+            buyCustomSushi();
+            gui.clearListSelected();
+            gui.setListItems(vending.getSlots());
+            specialVending.clearCustomize();
+            gui.enableCreate(false);
+            updateReceipt();
+        }
+        else if (action.equals("Buy")) {
+            buyItem();
+            gui.clearListSelected();
+            gui.setAttributesFunction(false);
+        }
+        else if (action.equals("Cancel")) {
+            popMessage("Money (" + currInsert + " Pesos) is returned to you.", "Purchasing Cancelled", 1);
+            vending.getInsertedMoney().resetMoney();
+            gui.dispose();
+        }
+        else if (action.equals("ADD")) {
+            int vendInsert = vending.getInsertedMoney().getTotalAmount();
+            if (currInsert == vendInsert)
+                popMessage("You need to add any denominations first!", "Inserting Unsuccessful", 0);
+            else {
+                vending.getInsertedMoney().setMoney(insert);
+                popMessage("Money (" + (currInsert - vendInsert)  + " Pesos) Successfully Added!", "Inserting Successful", 1);
+            }
+        } 
+        else {
+            for (String d : denominations) {
+                if (action.equals(d)) {
+                    insert.addDenomination(Integer.parseInt(d), 1);
+                    gui.setLabelAmount(insert.getTotalAmount());
+                    break;
+                }
+            }
+        }
     }
 
     /**
@@ -121,50 +252,13 @@ public class VendingFeatureController implements ActionListener, ListSelectionLi
             JOptionPane.showMessageDialog(null, message, title, type, new ImageIcon("src/images/iconVM.png"));
         else 
             JOptionPane.showMessageDialog(null, message, title, type);
-    }
 
-    /**
-     * Handles the actionPerformed event for buttons in the VendingFeatureGUI.
-     *
-     * @param e The ActionEvent.
-     */
-    @Override
-    public void actionPerformed(ActionEvent e) {
-        String[] denominations = {"100", "50", "20", "10", "5", "1"};
-        int currInsert = insert.getTotalAmount();
-
-        if (e.getActionCommand().equals("Buy")) {
-            buyItem();
-        }
-        else if (e.getActionCommand().equals("Cancel")) {
-            popMessage("Money (" + currInsert + " Pesos) is returned to you.", "Purchasing Cancelled", 1);
-            vendings.getCurrentVending().getInsertedMoney().resetMoney();
-            gui.dispose();
-        }
-        else if (e.getActionCommand().equals("ADD")) {
-            int vendInsert = vendings.getCurrentVending().getInsertedMoney().getTotalAmount();
-            if (currInsert == vendInsert)
-                popMessage("You need to add any denominations first!", "Inserting Unsuccessful", 0);
-            else {
-                vendings.getCurrentVending().getInsertedMoney().setMoney(insert);
-                popMessage("Money (" + (currInsert - vendInsert)  + " Pesos) Successfully Added!", "Inserting Successful", 1);
-            }
-        } 
-        else {
-            for (String d : denominations) {
-                if (e.getActionCommand().equals(d)) {
-                    insert.addDenomination(Integer.parseInt(d), 1);
-                    gui.setLabelAmount(insert.getTotalAmount());
-                    break;
-                }
-            }
-        }
     }
 
     @Override
     public void valueChanged(ListSelectionEvent e) {
         if (e.getValueIsAdjusting()) {
-            if (gui.getSelectedIndexListItems() != -1)
+            if (gui.getSelectedIndexListItems() != 0)
                 gui.setAttributesFunction(true);
             else
                 gui.setAttributesFunction(false);
@@ -174,15 +268,32 @@ public class VendingFeatureController implements ActionListener, ListSelectionLi
     @Override
     public void stateChanged(ChangeEvent e) {
         if (e.getSource() == gui.getTabbedPane()) {
-            if (gui.getTabbedPane().getSelectedIndex() == 0) {
-                insert.setMoney(vendings.getCurrentVending().getInsertedMoney());
+            if (gui.getTabbedPane().getSelectedIndex() != 2) {
+                insert.setMoney(vending.getInsertedMoney());
                 gui.setLabelAmount(insert.getTotalAmount());
             }
-            else {
-                gui.setAttributesFunction(false);
-                gui.clearListSelected();
-            }
+            
+            gui.setAttributesFunction(false);
+            gui.clearListSelected();
+            
         }
     }
+
+	@Override
+	public void itemStateChanged(ItemEvent e) {
+        if (e.getStateChange() == ItemEvent.SELECTED) {
+            if (!gui.getNori().equals("") && !gui.getRice().equals("")) {
+                if (!specialVending.chooseMainItem(gui.getNori(), gui.getRice())) {
+                    popMessage("Quantity available is not enough.", "Unsuccessful", 0);
+                    gui.setSelectedMainItem();
+                    gui.enableCreate(false);
+                }
+                else 
+                    gui.enableCreate(true);
+
+                updateReceipt();
+            }
+        }
+	}
     
 }

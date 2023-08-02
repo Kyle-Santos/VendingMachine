@@ -16,11 +16,16 @@ public class TransactionList {
     }
 
     /**
-     * This method prints all the transactions made.
+     * Returns a string representation of the transaction history.
+     *
+     * @return A string containing the details of all transactions made in the vending machine.
      */
-    public void listTransaction() {
+    public String listTransaction() {
+        String list = "The Transaction History of This Vending Machine\n";
         for (Transaction t : this.transactions)
-            System.out.println(t);
+            list += t;
+
+        return list;
     }
 
     /**
@@ -31,6 +36,5 @@ public class TransactionList {
     public void createTransaction(String bought) {
         Transaction t = new Transaction(bought);
         this.transactions.add(t);
-        System.out.println(t);
     }
 }

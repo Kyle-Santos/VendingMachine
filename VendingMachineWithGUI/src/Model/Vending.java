@@ -1,11 +1,14 @@
 package Model;
 
+import java.util.ArrayList;
+
 /**
- * Represents a vending machine with inventory, transaction history, and current money.
+ * The Vending class represents a vending machine with a name, slots, transaction history, inserted money, and current money.
  */
 public class Vending {
-    protected String name;
-    protected Inventory inventory;
+    protected String name; 
+    protected ArrayList<Item> items; // keep track of the items vending machine ArrayList
+    protected ArrayList<Slot> slots; // store items in each slots
     protected TransactionList history;
     protected Money money, insertedMoney;
 
@@ -14,10 +17,13 @@ public class Vending {
      */
     public Vending() {
         this.name = "No name";
-        this.inventory = new Inventory();
+        this.slots = new ArrayList<Slot>();
         this.history = new TransactionList();
         this.money = new Money();
         this.insertedMoney = new Money();
+        this.items = new ArrayList<Item>();
+
+        loadDefaultItems();
     }
 
     /**
@@ -27,11 +33,48 @@ public class Vending {
      */
     public Vending(String name) {
         this.name = name;
-        this.inventory = new Inventory();
+        this.slots = new ArrayList<Slot>();
         this.history = new TransactionList();
         this.money = new Money();
         this.insertedMoney = new Money();
+        this.items = new ArrayList<Item>();
+
+        loadDefaultItems();
     }
+
+    /**
+     * Loads default items into the vending machine slots.
+     */
+    private void loadDefaultItems() {
+        items.add(new Item("Plain Nori", 30.35, "Nori"));
+        items.add(new Item("Spicy Nori", 30.35, "Nori"));
+        items.add(new Item("Wasabi Nori", 30.35, "Nori"));
+        items.add(new Item("Exquisite Nori", 30.35, "Nori"));
+        items.add(new Item("Sushi Rice", 354, "Rice"));
+        items.add(new Item("Black Rice", 375, "Rice"));
+        items.add(new Item("Brown Rice", 365, "Rice"));
+        items.add(new Item("Prawn", 85, "Topping"));
+        items.add(new Item("Crab Stick", 190, "Topping"));
+        items.add(new Item("Cucumber", 60, "Topping"));
+        items.add(new Item("Sashimi", 176, "Topping"));
+        items.add(new Item("Mango", 120, "Topping"));
+        items.add(new Item("Wasabi", 31, "Topping"));
+
+        slots.add(new Slot(items.get(0), 30, 21));
+        slots.add(new Slot(items.get(1), 30, 25));
+        slots.add(new Slot(items.get(2), 30, 29));
+        slots.add(new Slot(items.get(3), 30, 40));
+        slots.add(new Slot(items.get(4), 30, 50));
+        slots.add(new Slot(items.get(5), 30, 65));
+        slots.add(new Slot(items.get(6), 30, 60));
+        slots.add(new Slot(items.get(7), 30, 156));
+        slots.add(new Slot(items.get(8), 30, 75));
+        slots.add(new Slot(items.get(9), 30, 88));
+        slots.add(new Slot(items.get(10), 30, 264));
+        slots.add(new Slot(items.get(11), 30, 33));
+        slots.add(new Slot(items.get(12), 30, 72));
+    }
+
 
     // Maintenance methods
 
@@ -39,12 +82,25 @@ public class Vending {
      * Restocks an item at a specific index with a specified quantity.
      *
      * @param index    the index of the item
-     * @param quantity the quantity to add
+     * @param quantity the quantity to be added
      */
     public void restockItem(int index, int quantity) {
-        Item i = inventory.getSlot().get(index);
-        i.addQuantity(quantity);
-        System.out.println("\nRestocking....\nAdding " + quantity + "....\nSucess.\n");
+        slots.get(index).addQuantity(items.get(index), quantity);
+    }
+
+    /**
+     * Adds a new item to the vending machine inventory.
+     *
+     * @param name     the name of the new item
+     * @param calories the calories of the new item
+     * @param cost     the cost of the new item
+     * @param qty      the quantity of the new item
+     * @param type     the type of the new item
+     */
+    public void addItem(String name, double calories, int cost, int qty, String type) {
+        Item i = new Item(name, calories, type);
+        items.add(i);
+        slots.add(new Slot(i , qty, cost));
     }
 
     /**
@@ -54,10 +110,7 @@ public class Vending {
      * @param price the new price
      */
     public void updatePrice(int index, int price) {
-        Item i = inventory.getSlot().get(index);
-        System.out.print("\nItem Found.\nUpdating price....\nSucess.\nFrom " + i.getCost());
-        i.setCost(price);
-        System.out.println(" to " + price + ".\n");
+        slots.get(index).setCost(price);
     }
 
     /**
@@ -65,7 +118,6 @@ public class Vending {
      */
     public void collectMoney() {
         Money reset = new Money();
-        System.out.println("Collecting money of Vending Machine " + this.name + ".....\nWithdrawing " + money.getTotalAmount() + ".....\nSuccess.\n");
         this.money = reset;
         this.money.generateChange(money, this.money.getTotalAmount());
     }
@@ -80,17 +132,11 @@ public class Vending {
      * @param quantity the quantity of the sold item
      * @param change   the change returned to the buyer
      */
-    public void printSold(String item, int quantity, Money change) {
+    public String printSold(String item, int quantity, Money change) {
         String bought = "\nYou bought " + quantity + " of " + item.toUpperCase() + "\n\nYour Change:\n" + change.listDenominations();
         history.createTransaction(bought);
-    }
 
-    /**
-     * Lists all the items in the vending machine.
-     */
-    public void listItems() {
-        System.out.println("\n=====| " + name + " |=====\n");
-        System.out.println(inventory);
+        return bought;
     }
 
     /**
@@ -113,12 +159,21 @@ public class Vending {
     }
 
     /**
-     * Returns the inventory of the vending machine.
+     * Returns the slots of the vending machine.
      *
-     * @return the inventory of the vending machine
+     * @return the slots of the vending machine
      */
-    public Inventory getInventory() {
-        return this.inventory;
+    public ArrayList<Slot> getSlots() {
+        return this.slots;
+    }
+
+    /**
+     * Returns the items of the vending machine.
+     *
+     * @return the items of the vending machine
+     */
+    public ArrayList<Item> getItems() {
+        return this.items;
     }
 
     /**
@@ -141,13 +196,32 @@ public class Vending {
     }
 
     /**
-     * Returns the selected item at the specified index in the vending machine inventory.
+     * Returns the selected item at the specified index in the vending machine slots.
      *
-     * @param index the index of the item in the inventory
+     * @param index the index of the item in the slots
      * @return the selected item if found, null otherwise
      */
     public Item getSelectedItem(int index) {
-        return inventory.getSlot().get(index);
+        return items.get(index);
+    }
+
+    /**
+     * Returns the string representation of the item at the specified index in the vending machine slots.
+     *
+     * @param index the index of the item in the slots
+     * @return the string representation of the item if found, null otherwise
+     */
+    public String getItemInfo(int index) {
+        return this.slots.get(index).toString();
+    }
+
+    /**
+     * Returns the transaction history of the vending machine.
+     *
+     * @return the transaction history of the vending machine
+     */
+    public String getTransactionList() {
+        return history.listTransaction();
     }
 }
 

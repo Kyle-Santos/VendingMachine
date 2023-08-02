@@ -31,15 +31,15 @@ public class SpecialVending extends Vending {
      * @return true if the main ingredients are successfully chosen, false otherwise
      */
     public boolean chooseMainItem(String nori, String rice) {
-        Item searchNori = searchItem(nori);
-        Item searchRice = searchItem(rice);
+        int searchNori = searchItem(nori);
+        int searchRice = searchItem(rice);
         boolean success = false;
 
-        for (Item i : inventory.getSlot())
+        for (Item i : items)
             if (i.getType().equals("Nori") || i.getType().equals("Rice"))
                 customize.remove(i.getName());
 
-        if (searchNori.getQuantity() >= 1 && searchRice.getQuantity() >= 1) {
+        if (slots.get(searchNori).getQuantity() >= 1 && slots.get(searchRice).getQuantity() >= 1) {
             customize.put(nori, 1);
             customize.put(rice, 1);
             success = true;
@@ -57,11 +57,11 @@ public class SpecialVending extends Vending {
      */
     public boolean addTopping(String name, int quantity) {
         boolean success = false;
-        Item item = searchItem(name);
+        int item = searchItem(name);
         
-        if (item.getQuantity() > quantity) {
+        if (slots.get(item).getQuantity() > quantity) {
             if (customize.containsKey(name)) {
-                if (item.getQuantity() >= quantity + customize.get(name)) {
+                if (slots.get(item).getQuantity() >= quantity + customize.get(name)) {
                     customize.put(name, customize.get(name) + quantity);
                     success = true;
                 }
@@ -87,7 +87,7 @@ public class SpecialVending extends Vending {
         steps.add("Preparing Ingredients...");
         steps.add("Preparing Equipments...");
         for (Map.Entry<String, Integer> e : customize.entrySet()) {
-            search = searchItem(e.getKey());
+            search = items.get(searchItem(e.getKey()));
             if (search.getType().equals("Nori")) {
                 steps.add("Spreading out " + search.getName() + "...");
             }
@@ -97,7 +97,7 @@ public class SpecialVending extends Vending {
         }
 
         for (Map.Entry<String, Integer> e : customize.entrySet()) {
-            search = searchItem(e.getKey()); 
+            search = items.get(searchItem(e.getKey())); 
             if (search.getType().equals("Topping"))
                 steps.add("Preparing " + search.getName() + "...");
         }
@@ -114,11 +114,11 @@ public class SpecialVending extends Vending {
      * Updates the inventory after customizing the sushi.
      */
     public void updateInventory() {
-        Item search = null;
+        int search = -1;
 
         for (Map.Entry<String, Integer> e : customize.entrySet()) {
             search = searchItem(e.getKey());
-            search.setQuantity(search.getQuantity() - e.getValue());
+            slots.get(search).deductQuantity(e.getValue());
         }
     }
 
@@ -126,16 +126,14 @@ public class SpecialVending extends Vending {
      * Searches for an item with the specified name in the inventory.
      *
      * @param name the name of the item to search for
-     * @return the Item object if found, null otherwise
+     * @return the index of the item if found, -1 otherwise
      */
-    public Item searchItem(String name) {
-        Item search = null;
-
-        for (Item i : inventory.getSlot())
+    public int searchItem(String name) {
+        for (Item i : items)
             if (i.getName().equalsIgnoreCase(name))
-                return i;
+                return items.indexOf(i);
         
-        return search;
+        return -1;
     }
 
     /**
@@ -146,14 +144,14 @@ public class SpecialVending extends Vending {
     public String getListItems() {
         String list = "";
         double totalCalories = 0;
-        Item search = null;
+        int search;
         totalCostSushi = 0;
 
         for (Map.Entry<String, Integer> e : customize.entrySet()) {
             list += e.getKey() + ": " + e.getValue() + "\n";
             search = searchItem(e.getKey());
-            totalCostSushi += search.getCost() * e.getValue();
-            totalCalories += search.getCalories() * e.getValue();
+            totalCostSushi += slots.get(search).getCost() * e.getValue();
+            totalCalories += items.get(search).getCalories() * e.getValue();
         }
 
         list += "\nAmount: " + totalCostSushi;

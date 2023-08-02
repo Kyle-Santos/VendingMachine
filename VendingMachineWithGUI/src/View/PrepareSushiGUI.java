@@ -65,7 +65,7 @@ public class PrepareSushiGUI extends JFrame{
         JTextArea textStep = new JTextArea();
         textStep.setForeground(new Color(232, 234, 234));
         textStep.setBackground(new Color(79, 79, 79));
-        textStep.setBounds(56, 67, 205, 300);
+        textStep.setBounds(71, 67, 205, 300);
         panelCenter.add(textStep);
         
         Timer timer = new Timer(500, new ActionListener() {

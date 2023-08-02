@@ -3,7 +3,9 @@ package View;
 import java.awt.Color;
 import java.awt.Font;
 import java.awt.GridLayout;
+import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.util.ArrayList;
 
 import javax.swing.DefaultListModel;
 import javax.swing.JButton;
@@ -17,13 +19,14 @@ import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JSpinner;
 import javax.swing.JTabbedPane;
+import javax.swing.JTextArea;
 import javax.swing.JTextField;
+import javax.swing.ScrollPaneConstants;
 import javax.swing.SwingConstants;
 import javax.swing.event.ChangeListener;
 import javax.swing.event.ListSelectionListener;
 
-import Model.Inventory;
-import Model.Item;
+import Model.Slot;
 
 /**
  * The MaintenanceGUI class represents the maintenance GUI of the Vending Machine Factory Simulator.
@@ -62,6 +65,10 @@ public class MaintenanceGUI extends JFrame {
 	private JButton btnAddItem;
     private JComboBox<String> itemType;
 
+    // History Pane
+    private JTextArea textTransaction;
+    private JScrollPane scrollTransaction;
+
     /**
      * Creates a new MaintenanceGUI instance.
      * Initializes the maintenance user interface.
@@ -84,7 +91,7 @@ public class MaintenanceGUI extends JFrame {
 
     private void init() {
     	tabbedPane = new JTabbedPane(JTabbedPane.TOP);
-    	tabbedPane.setBounds(0, 0, 450, 372);
+    	tabbedPane.setBounds(0, 0, 500, 372);
         
 		// PANEL UPDATE
         JPanel panelUpdateItem = new JPanel();
@@ -131,24 +138,28 @@ public class MaintenanceGUI extends JFrame {
 
 		// PANEL COLLECT
         JPanel panelCollect = new JPanel();
-        tabbedPane.addTab("Collect Money", null, panelCollect, null);
+        tabbedPane.addTab("Collect", null, panelCollect, null);
         
         txtMoney = new JTextField();
         txtMoney.setEnabled(false);
         txtMoney.setEditable(false);
-        txtMoney.setBounds(0, 25, 429, 92);
+        txtMoney.setBounds(0, 25, 429, 103);
         txtMoney.setFont(new Font("Lucida Grande", Font.PLAIN, 42));
         txtMoney.setHorizontalAlignment(SwingConstants.CENTER);
         txtMoney.setColumns(10);
         
         btnCollect = new JButton("Collect");
-        btnCollect.setBounds(170, 267, 88, 29);
+        btnCollect.addActionListener(new ActionListener() {
+        	public void actionPerformed(ActionEvent e) {
+        	}
+        });
+        btnCollect.setBounds(169, 270, 88, 29);
         
         checkSure = new JCheckBox("Are You Sure You Want To Collect All Money?");
-        checkSure.setBounds(56, 220, 314, 23);
+        checkSure.setBounds(56, 222, 314, 23);
         
         JEditorPane txtInfo = new JEditorPane();
-        txtInfo.setBounds(100, 142, 230, 48);
+        txtInfo.setBounds(99, 145, 230, 48);
         txtInfo.setBackground(new Color(238, 238, 238));
         txtInfo.setEditable(false);
         txtInfo.setText("This is all the money your vending \nmachine have. You can choose to \ncollector withdraw all this money.");
@@ -278,6 +289,22 @@ public class MaintenanceGUI extends JFrame {
         panelAddItem.add(itemType);
 
         getContentPane().add(tabbedPane);
+        
+        JPanel panelTransaction = new JPanel();
+        tabbedPane.addTab("History", null, panelTransaction, null);
+        panelTransaction.setLayout(null);
+        
+        scrollTransaction = new JScrollPane();
+        scrollTransaction.setHorizontalScrollBarPolicy(ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER);
+        scrollTransaction.setBounds(49, 0, 332, 326);
+        panelTransaction.add(scrollTransaction);
+        
+        textTransaction = new JTextArea();
+        scrollTransaction.setViewportView(textTransaction);
+        textTransaction.setBackground(new Color(238, 238, 238));
+        textTransaction.setEditable(false);
+        textTransaction.setLineWrap(true);
+        textTransaction.setWrapStyleWord(true);
     }
 
     /**
@@ -366,26 +393,54 @@ public class MaintenanceGUI extends JFrame {
 		return this.checkSure.isSelected();
 	}
 
+    /**
+     * Gets the name of the item from the text field.
+     *
+     * @return The name of the item as a string.
+     */
     public String getTfName() {
         return this.tfName.getText();
     }
 
+    /**
+     * Gets the calories of the item from the text field.
+     *
+     * @return The calories of the item as a string.
+     */
     public String getTfCalories() {
         return this.tfCalories.getText();
     }
 
+    /**
+     * Gets the cost of the item from the text field.
+     *
+     * @return The cost of the item as a string.
+     */
     public String getTfCost() {
         return this.tfCost.getText();
     }
 
+    /**
+     * Gets the quantity of the new item from the spinner component.
+     *
+     * @return The quantity of the new item as a string.
+     */
     public String getSpinnerNewQty() {
         return this.spinnerNewQty.getValue().toString();
     }
 
+    /**
+     * Gets the type of the new item from the combo box.
+     *
+     * @return The type of the new item as a string.
+     */
     public String getItemType() {
         return this.itemType.getSelectedItem().toString();
     }
 
+    /**
+     * Clears the selection of the list of items.
+     */
 	public void clearListSelected() {
         this.listItems.clearSelection();
     }
@@ -407,12 +462,12 @@ public class MaintenanceGUI extends JFrame {
      *
      * @param slots The Inventory object containing the list of items to be displayed.
      */
-	public void setListItems(Inventory slots) {
+	public void setListItems(ArrayList<Slot> items) {
         // list model
         DefaultListModel<String> listModel = new DefaultListModel<String>();
 
         // add items from inventory to list model
-        for (Item i : slots.getSlot()) {
+        for (Slot i : items) {
             listModel.addElement(i.toString());
         }
 
@@ -421,11 +476,30 @@ public class MaintenanceGUI extends JFrame {
         listItems.clearSelection();
     }
 
+    /**
+     * Sets the label that displays the amount.
+     *
+     * @param amount The amount to be displayed on the label.
+     */
 	public void setLabelAmount(int amount) {
         this.labelAmount.setText("Amount: " + amount);
     }
 
+    /**
+     * Sets the text of the money display.
+     *
+     * @param amount The amount to be displayed as text.
+     */
 	public void setTxtMoney(int amount) {
 		this.txtMoney.setText("Total Money: " + amount);
 	}
+
+    /**
+     * Sets the text of the transaction history display.
+     *
+     * @param transaction The transaction history to be displayed as text.
+     */
+    public void setTextTransaction(String transaction) {
+        textTransaction.setText(transaction);
+    }
 }

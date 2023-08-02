@@ -6,11 +6,9 @@ import java.awt.event.ActionListener;
 import javax.swing.ImageIcon;
 import javax.swing.JOptionPane;
 
-import Model.SpecialVending;
 import Model.VendingCollection;
 import View.MainMenuGUI;
 import View.MaintenanceGUI;
-import View.SpecialFeatureGUI;
 import View.VendingFeatureGUI;
 
 /**
@@ -65,21 +63,14 @@ public class MainMenuController implements ActionListener {
         } else if (action.equals("Exit")) {
             System.exit(0);
         } else if (selected >= 0) {
-            if (action.equals("Features")) {
-                vendings.setCurrent(selected);
+            vendings.setCurrent(selected);
 
-                if (vendings.getCurrentVending() instanceof SpecialVending) {
-                    SpecialVending specialVend = (SpecialVending) vendings.getCurrentVending();
-                    SpecialFeatureGUI specialFeature = new SpecialFeatureGUI();
-                    new SpecialFeatureController(specialFeature, specialVend);
-                } else {
-                    VendingFeatureGUI feature = new VendingFeatureGUI();
-                    new VendingFeatureController(feature, vendings);
-                }
+            if (action.equals("Features")) {
+                VendingFeatureGUI feature = new VendingFeatureGUI();
+                new VendingFeatureController(feature, vendings.getCurrentVending());
             } else {
-                vendings.setCurrent(selected);
                 MaintenanceGUI maintenance = new MaintenanceGUI();
-                new MaintenanceController(maintenance, vendings);
+                new MaintenanceController(maintenance, vendings.getCurrentVending());
             }
         } else
             popMessage("Select A Vending Machine First.", "Select Vending Machine", 0);
