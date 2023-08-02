@@ -8,18 +8,21 @@ import java.util.ArrayList;
  */
 public class VendingCollection {
     private ArrayList<Vending> vendings; // List of Vending machines
-    private int current = -1;
+    private int current;
 
     /**
      * Constructs a new VendingCollection with an empty list of Vending machines.
      */
     public VendingCollection() {
         this.vendings = new ArrayList<Vending>();
+        current = -1;
     }
 
     /**
-     * Creates a new Vending machine.
-     * The user will be asked to input the name of the Vending machine.
+     * Creates a new vending machine and adds it to the list of vending machines.
+     *
+     * @param name The name of the vending machine to be created.
+     * @param type The type of the vending machine to be created (0 for regular vending machine, 1 for special vending machine).
      */
     public void createVending(String name, int type) {
         if (type == 0)
@@ -29,7 +32,11 @@ public class VendingCollection {
     }
 
     /**
-     * Lists all the Vending machines in the collection.
+     * Retrieves a formatted list of all the vending machines.
+     *
+     * @return A String containing the list of vending machines with their names and types.
+     *         Each vending machine is listed with a number in parentheses.
+     *         If a vending machine is of type SpecialVending, it is marked as "(Special)".
      */
     public String listVendings() {
         String vmList = "";
@@ -72,20 +79,20 @@ public class VendingCollection {
     }
 
     /**
-     * Sets the current Vending machine index to the specified index in the collection.
-     *
-     * @param index the index of the current Vending machine
-     */
-    public void setCurrent(int index) {
-        this.current = index;
-    }
-
-    /**
      * Returns the currently selected Vending machine in the collection.
      *
      * @return the currently selected Vending machine if one is selected, null otherwise
      */
     public Vending getCurrentVending() {
         return this.vendings.get(current);
+    }
+
+    /**
+     * Sets the current Vending machine index to the specified index in the collection.
+     *
+     * @param index the index of the current Vending machine
+     */
+    public void setCurrent(int index) {
+        this.current = index;
     }
 }

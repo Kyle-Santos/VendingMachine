@@ -20,8 +20,6 @@ public class Driver {
         VendingCollection collection = new VendingCollection();
 
         new MainMenuController(gui, collection);
-
-        System.out.println("\nWELCOME TO THE VENDING MACHINE SIMULATOR");
     }
 
 }

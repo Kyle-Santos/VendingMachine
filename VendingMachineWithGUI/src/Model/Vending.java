@@ -10,7 +10,8 @@ public class Vending {
     protected ArrayList<Item> items; // keep track of the items vending machine ArrayList
     protected ArrayList<Slot> slots; // store items in each slots
     protected TransactionList history;
-    protected Money money, insertedMoney;
+    protected Money money; 
+    protected Money insertedMoney;
 
     /**
      * Constructs a new Vending instance with default name.
@@ -117,9 +118,7 @@ public class Vending {
      * Collects money from the vending machine and resets the money to 0.
      */
     public void collectMoney() {
-        Money reset = new Money();
-        this.money = reset;
-        this.money.generateChange(money, this.money.getTotalAmount());
+        this.money.resetMoney();
     }
 
     
@@ -131,6 +130,8 @@ public class Vending {
      * @param item     the name of the sold item
      * @param quantity the quantity of the sold item
      * @param change   the change returned to the buyer
+     * 
+     * @return A formatted string containing the details of the sold item and the change.
      */
     public String printSold(String item, int quantity, Money change) {
         String bought = "\nYou bought " + quantity + " of " + item.toUpperCase() + "\n\nYour Change:\n" + change.listDenominations();

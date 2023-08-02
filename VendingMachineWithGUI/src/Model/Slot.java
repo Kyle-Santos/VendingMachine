@@ -47,14 +47,9 @@ public class Slot {
      */
 
     public int buyItem(int quantity, int money) {
-        int itemRemove;
         int change = money - (quantity * cost);
-
-        for (int i = 0; i < quantity; i++) {
-            itemRemove = quantity - i - 1;
-            stock.remove(itemRemove);
-        }
-
+        deductQuantity(quantity);
+        
         return change;
     }
 
@@ -67,9 +62,9 @@ public class Slot {
         int itemRemove;
 
         for (int i = 0; i < quantity; i++) {
-            itemRemove = quantity - 1;
+            itemRemove = this.quantity - 1;
             stock.remove(itemRemove);
-            quantity -= 1;
+            this.quantity -= 1;
         }
     }
 
@@ -94,7 +89,7 @@ public class Slot {
     @Override
     public String toString() {
         return stock.get(0).getName() + " | Calories: " + stock.get(0).getCalories() 
-        + " | Quantity: " + quantity + " | Cost: " + cost;
+        + " | Cost: " + cost + " | Quantity: " + quantity;
     }
 
 

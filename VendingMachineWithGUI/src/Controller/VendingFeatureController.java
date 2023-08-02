@@ -41,7 +41,7 @@ public class VendingFeatureController implements ActionListener, ListSelectionLi
 
         // if vending machine is a special vm, enables the feature of special vending machine
         if (vending instanceof SpecialVending) {
-            this.specialVending = (SpecialVending) vending;
+            this.specialVending = (SpecialVending) this.vending;
             gui.enableCustomizePanel();
             gui.setComboBoxes(vending.getSlots());
             gui.setItemChangeListener(this);
@@ -89,19 +89,18 @@ public class VendingFeatureController implements ActionListener, ListSelectionLi
             popMessage("Money inserted is insufficient. \nTotal cost is ₱" + totalCost + "\n\nYour Money\n" + 
             insert.listDenominations() + "is returned to you.", "Buying Unsuccessful", 0);
         } 
-        else if (vending.getMoney().getTotalAmount() >= totalCost) {
+        else if (vending.getMoney().getTotalAmount() >= totalCost || totalCost == insert.getTotalAmount()) {
             vending.getMoney().updateDenominations(insert);
             totalCost = insert.getTotalAmount() - totalCost; 
             success = vending.getMoney().generateChange(change, totalCost);
 
             if (success) { 
                 new PrepareSushiGUI(specialVending);
-                System.out.println("\nProcessing the amount... \nBuying...");
-                System.out.println("Buying Sucessful....\nDispensing Item/s Now......\n");
                 popMessage("You have bought item successfully.\n" + (vending.printSold("Specially For You Sushi", 1, change)), "Buying Successful", 1);
-                
+                specialVending.updateInventory();
             } 
             else {
+                vending.getMoney().returnMoney(insert);
                 popMessage("Sorry unable to sell this item.\nYour Money\n" + insert.listDenominations() + 
                 "is returned to you.", "Buying Unsuccessful", 0);
             }
@@ -150,11 +149,10 @@ public class VendingFeatureController implements ActionListener, ListSelectionLi
                     success = vending.getMoney().generateChange(change, totalCost);
 
                     if (success) {
-                        System.out.println("\nProcessing the amount... \nBuying...");
-                        System.out.println("Buying Sucessful....\nDispensing Item/s Now......\n");
                         popMessage("You have bought item successfully.\n" + (vending.printSold(itemName, quantity, change)), "Buying Successful", 1);
                     } 
                     else {
+                        vending.getMoney().returnMoney(insert);
                         popMessage("Sorry unable to sell this item.\n\nYour Money\n" + insert.listDenominations() + 
                         "is returned to you.", "Buying Unsuccessful", 0);
                     }
@@ -190,7 +188,6 @@ public class VendingFeatureController implements ActionListener, ListSelectionLi
 
         if (action.equals("Add")) {
             quantity = convertToInt(gui.getTfQtyCustom());
-            System.out.println(quantity);
 
             if (quantity > 0) {
                 if (specialVending.addTopping(vending.getItems().get(gui.getTopping()).getName(), quantity))
@@ -271,6 +268,14 @@ public class VendingFeatureController implements ActionListener, ListSelectionLi
             if (gui.getTabbedPane().getSelectedIndex() != 2) {
                 insert.setMoney(vending.getInsertedMoney());
                 gui.setLabelAmount(insert.getTotalAmount());
+            }
+
+            if (vending instanceof SpecialVending) {
+                if (gui.getTabbedPane().getSelectedIndex() != 1) {
+                    specialVending.clearCustomize();
+                    gui.setSelectedMainItem();
+                    updateReceipt();
+                }
             }
             
             gui.setAttributesFunction(false);

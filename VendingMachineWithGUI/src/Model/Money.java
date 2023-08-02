@@ -37,8 +37,19 @@ public class Money {
         for (int i = 0; i < denominations.length; i++)
             if (pay.getDenominations().get(denominations[i]) != 0)
                 addDenomination(denominations[i], pay.getDenominations().get(denominations[i]));
+    }
 
-        //totalAmount += pay.getTotalAmount();
+    /**
+     * return denominations from specified money.
+     *
+     * @param pay the Money object to return denominations
+     */
+    public void returnMoney(Money pay) {
+        int[] denominations = {100, 50, 20, 10, 5, 1};
+
+        for (int i = 0; i < denominations.length; i++)
+            if (pay.getDenominations().get(denominations[i]) != 0)
+                deductDenomination(denominations[i], pay.getDenominations().get(denominations[i]));
     }
 
     /**
@@ -101,9 +112,9 @@ public class Money {
      * @param key   the denomination
      * @param value the value to deduct
      */
-    private void deductDenomination(int key, int value) {
+    public void deductDenomination(int key, int value) {
         int val = denominations.get(key);
-        denominations.replace(key, value - val);
+        denominations.replace(key, val - value);
         totalAmount -= key * value;
     }
 

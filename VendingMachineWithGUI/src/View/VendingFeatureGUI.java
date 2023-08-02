@@ -25,6 +25,7 @@ import javax.swing.event.ListSelectionListener;
 
 import Model.Item;
 import Model.Slot;
+import javax.swing.ImageIcon;
 
 /**
  * The VendingFeatureGUI class represents the GUI for features in the vending machine.

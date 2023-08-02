@@ -63,6 +63,7 @@ public class PrepareSushiGUI extends JFrame{
         panelCenter.add(progressBar);
         
         JTextArea textStep = new JTextArea();
+        textStep.setEditable(false);
         textStep.setForeground(new Color(232, 234, 234));
         textStep.setBackground(new Color(79, 79, 79));
         textStep.setBounds(71, 67, 205, 300);
